@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111111">
+
+<title>Civil Line Chanda Admin</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#0d0e11;
+    --panel:#15171b;
+    --panel2:#1b1e23;
+    --text:#f6f6f6;
+    --muted:#8d929c;
+    --gold:#ffb52e;
+    --orange:#ff7a18;
+    --green:#42e695;
+    --red:#ff5c67;
+    --border:rgba(255,255,255,.08);
+}
+
+body{
+    min-height:100vh;
+    color:var(--text);
+    font-family:"DM Sans",sans-serif;
+    background:
+        radial-gradient(circle at 10% 0%,rgba(255,181,46,.13),transparent 30%),
+        radial-gradient(circle at 90% 20%,rgba(255,91,24,.09),transparent 28%),
+        var(--bg);
+    overflow-x:hidden;
+}
+
+/* Ambient background */
+
+body::before{
+    content:"";
+    position:fixed;
+    width:420px;
+    height:420px;
+    border-radius:50%;
+    background:rgba(255,181,46,.04);
+    filter:blur(80px);
+    top:25%;
+    left:-180px;
+    pointer-events:none;
+    animation:floatGlow 8s ease-in-out infinite alternate;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    width:360px;
+    height:360px;
+    border-radius:50%;
+    background:rgba(255,100,30,.035);
+    filter:blur(80px);
+    right:-150px;
+    bottom:5%;
+    pointer-events:none;
+    animation:floatGlow 10s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes floatGlow{
+    from{transform:translateY(-25px)}
+    to{transform:translateY(25px)}
+}
+
+button{
+    font-family:inherit;
+    cursor:pointer;
+}
+
+.app{
+    width:min(1120px,100%);
+    margin:auto;
+    padding:18px 18px 50px;
+}
+
+/* Header */
+
+.header{
+    position:sticky;
+    top:12px;
+    z-index:20;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:17px 18px;
+
+    border:1px solid var(--border);
+    border-radius:24px;
+
+    background:rgba(21,23,27,.82);
+    backdrop-filter:blur(22px);
+
+    box-shadow:
+        0 18px 60px rgba(0,0,0,.35);
+
+    animation:slideDown .7s ease both;
+}
+
+@keyframes slideDown{
+    from{
+        opacity:0;
+        transform:translateY(-15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.logo{
+    width:49px;
+    height:49px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:16px;
+
+    color:#111;
+
+    font-family:"Space Grotesk",sans-serif;
+    font-weight:800;
+
+    background:
+        linear-gradient(135deg,#ffd66b,#ff9f1c);
+
+    box-shadow:
+        0 7px 25px rgba(255,170,40,.22);
+}
+
+.brand h1{
+    font-family:"Space Grotesk",sans-serif;
+    font-size:18px;
+    letter-spacing:-.4px;
+}
+
+.brand p{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.notification{
+    position:relative;
+
+    width:45px;
+    height:45px;
+
+    border:1px solid var(--border);
+    border-radius:15px;
+
+    color:white;
+    background:#1b1d22;
+
+    font-size:18px;
+
+    transition:.25s;
+}
+
+.notification:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,181,46,.4);
+}
+
+.notification::after{
+    content:"";
+    position:absolute;
+
+    width:8px;
+    height:8px;
+
+    top:8px;
+    right:8px;
+
+    background:#ff4e58;
+    border:2px solid #1b1d22;
+
+    border-radius:50%;
+
+    animation:pulse 1.7s infinite;
+}
+
+@keyframes pulse{
+    0%,100%{
+        box-shadow:0 0 0 0 rgba(255,78,88,.4);
+    }
+    50%{
+        box-shadow:0 0 0 6px rgba(255,78,88,0);
+    }
+}
+
+/* Welcome */
+
+.welcome{
+    margin:32px 3px 18px;
+    animation:fadeUp .7s .1s ease both;
+}
+
+.welcome .small{
+    color:var(--gold);
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+}
+
+.welcome h2{
+    margin-top:5px;
+    font-family:"Space Grotesk",sans-serif;
+    font-size:30px;
+    letter-spacing:-1.3px;
+}
+
+.welcome p{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* Stats */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+
+    margin-top:20px;
+}
+
+.stat{
+    position:relative;
+    overflow:hidden;
+
+    min-height:125px;
+
+    padding:18px;
+
+    border:1px solid var(--border);
+    border-radius:21px;
+
+    background:linear-gradient(
+        145deg,
+        rgba(255,255,255,.065),
+        rgba(255,255,255,.025)
+    );
+
+    box-shadow:0 15px 45px rgba(0,0,0,.18);
+
+    animation:fadeUp .7s ease both;
+
+    transition:.3s;
+}
+
+.stat:nth-child(2){
+    animation-delay:.08s;
+}
+
+.stat:nth-child(3){
+    animation-delay:.16s;
+}
+
+.stat:hover{
+    transform:translateY(-4px);
+    border-color:rgba(255,181,46,.22);
+}
+
+.stat::after{
+    content:"";
+    position:absolute;
+
+    width:90px;
+    height:90px;
+
+    border-radius:50%;
+
+    background:rgba(255,181,46,.09);
+
+    right:-30px;
+    bottom:-35px;
+
+    filter:blur(4px);
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:11px;
+    font-weight:600;
+}
+
+.stat-number{
+    margin-top:8px;
+
+    font-family:"Space Grotesk",sans-serif;
+    font-size:30px;
+    font-weight:700;
+
+    letter-spacing:-1px;
+}
+
+.stat-icon{
+    position:absolute;
+    top:17px;
+    right:17px;
+
+    width:31px;
+    height:31px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:10px;
+
+    background:rgba(255,255,255,.06);
+
+    font-size:13px;
+}
+
+/* Main panel */
+
+.dashboard{
+    margin-top:17px;
+
+    padding:15px;
+
+    border:1px solid var(--border);
+    border-radius:24px;
+
+    background:rgba(255,255,255,.025);
+
+    box-shadow:0 18px 55px rgba(0,0,0,.18);
+
+    animation:fadeUp .8s .25s ease both;
+}
+
+/* Tabs */
+
+.tabs{
+    display:flex;
+    gap:7px;
+
+    padding:5px;
+
+    border-radius:15px;
+
+    background:#0b0c0f;
+    border:1px solid var(--border);
+}
+
+.tab{
+    flex:1;
+
+    border:0;
+    border-radius:11px;
+
+    padding:11px;
+
+    color:#777c85;
+    background:transparent;
+
+    font-weight:800;
+    font-size:12px;
+
+    transition:.25s;
+}
+
+.tab.active{
+    color:#111;
+
+    background:
+        linear-gradient(135deg,#ffd66b,#ff9b20);
+
+    box-shadow:0 5px 18px rgba(255,170,40,.15);
+}
+
+/* List */
+
+.list{
+    display:grid;
+    gap:12px;
+    margin-top:14px;
+}
+
+/* Payment card */
+
+.card{
+    position:relative;
+
+    padding:17px;
+
+    border:1px solid var(--border);
+    border-radius:21px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.065),
+            rgba(255,255,255,.025)
+        );
+
+    overflow:hidden;
+
+    animation:cardIn .55s ease both;
+
+    transition:
+        transform .25s,
+        border-color .25s,
+        background .25s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(255,181,46,.2);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.085),
+            rgba(255,255,255,.03)
+        );
+}
+
+@keyframes cardIn{
+    from{
+        opacity:0;
+        transform:translateY(12px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.card::before{
+    content:"";
+
+    position:absolute;
+
+    width:3px;
+    height:60%;
+
+    left:0;
+    top:20%;
+
+    border-radius:0 5px 5px 0;
+
+    background:var(--gold);
+
+    opacity:.8;
+}
+
+.card.approved-card::before{
+    background:var(--green);
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.name{
+    font-size:16px;
+    font-weight:800;
+}
+
+.email{
+    margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:11px;
+
+    word-break:break-word;
+}
+
+.amount{
+    color:#fff;
+
+    font-family:"Space Grotesk",sans-serif;
+    font-size:21px;
+    font-weight:700;
+
+    white-space:nowrap;
+}
+
+.meta{
+    margin-top:12px;
+
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    color:#737983;
+
+    font-size:10px;
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+
+    margin-top:12px;
+
+    padding:5px 9px;
+
+    border-radius:999px;
+
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.4px;
+}
+
+.status::before{
+    content:"";
+    width:5px;
+    height:5px;
+    border-radius:50%;
+}
+
+.status.pending{
+    color:#ffc44e;
+    background:rgba(255,181,46,.1);
+}
+
+.status.pending::before{
+    background:#ffb52e;
+    box-shadow:0 0 7px #ffb52e;
+}
+
+.status.approved{
+    color:#55e99c;
+    background:rgba(66,230,149,.1);
+}
+
+.status.approved::before{
+    background:#42e695;
+    box-shadow:0 0 7px #42e695;
+}
+
+/* Actions */
+
+.actions{
+    display:flex;
+    gap:8px;
+
+    margin-top:15px;
+}
+
+.actions button{
+    border:0;
+    border-radius:12px;
+
+    padding:11px 13px;
+
+    font-size:11px;
+    font-weight:800;
+
+    transition:.22s;
+}
+
+.view{
+    flex:1;
+
+    color:#ddd;
+    background:#22252a;
+
+    border:1px solid var(--border)!important;
+}
+
+.view:hover{
+    background:#2a2d33;
+}
+
+.approve{
+    flex:1.25;
+
+    color:#111;
+
+    background:
+        linear-gradient(135deg,#ffd66b,#ff951b);
+
+    box-shadow:
+        0 7px 20px rgba(255,158,30,.12);
+}
+
+.approve:hover{
+    transform:translateY(-2px);
+    box-shadow:
+        0 10px 25px rgba(255,158,30,.22);
+}
+
+.keep{
+    flex:1;
+
+    color:#aaa;
+    background:#1b1d21;
+}
+
+.receipt{
+    width:100%;
+
+    color:#55e99c;
+    background:rgba(66,230,149,.07);
+
+    border:1px solid rgba(66,230,149,.12)!important;
+}
+
+/* Empty */
+
+.empty{
+    padding:60px 20px;
+
+    text-align:center;
+
+    border:1px dashed rgba(255,255,255,.1);
+    border-radius:20px;
+
+    color:#777;
+
+    background:rgba(255,255,255,.015);
+}
+
+.empty-icon{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.empty strong{
+    display:block;
+    color:#ccc;
+    margin-bottom:4px;
+}
+
+/* Modal */
+
+.modal{
+    position:fixed;
+    inset:0;
+
+    z-index:100;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:18px;
+
+    background:rgba(0,0,0,.72);
+
+    backdrop-filter:blur(12px);
+}
+
+.modal.show{
+    display:flex;
+    animation:modalFade .25s ease;
+}
+
+@keyframes modalFade{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+.modal-box{
+    width:min(510px,100%);
+
+    overflow:hidden;
+
+    border:1px solid var(--border);
+    border-radius:24px;
+
+    background:#17191d;
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.55);
+
+    animation:modalUp .35s ease;
+}
+
+@keyframes modalUp{
+    from{
+        opacity:0;
+        transform:translateY(25px) scale(.97);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:15px 17px;
+
+    border-bottom:1px solid var(--border);
+}
+
+.modal-head strong{
+    font-size:14px;
+}
+
+.close{
+    width:35px;
+    height:35px;
+
+    border:0;
+    border-radius:10px;
+
+    color:#aaa;
+    background:#24262b;
+}
+
+.screenshot{
+    height:400px;
+
+    display:grid;
+    place-items:center;
+
+    background:
+        radial-gradient(circle at 50% 20%,rgba(255,181,46,.08),transparent 40%),
+        #0e0f12;
+
+    color:#777;
+
+    text-align:center;
+}
+
+.fake-receipt{
+    width:190px;
+    height:325px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:10px;
+
+    border-radius:8px;
+
+    color:#333;
+
+    background:#fff;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.45);
+
+    transform:rotate(-1deg);
+
+    animation:receiptFloat 4s ease-in-out infinite;
+}
+
+@keyframes receiptFloat{
+    0%,100%{transform:translateY(0) rotate(-1deg)}
+    50%{transform:translateY(-7px) rotate(1deg)}
+}
+
+.fake-receipt .circle{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#f2f2f2;
+}
+
+.fake-line{
+    width:115px;
+    height:7px;
+    border-radius:10px;
+    background:#eee;
+}
+
+.fake-line.small{
+    width:75px;
+}
+
+.modal-info{
+    padding:17px;
+}
+
+.modal-info .person{
+    font-size:14px;
+    font-weight:800;
+}
+
+.modal-info .details{
+    margin-top:3px;
+    color:#777d86;
+    font-size:11px;
+}
+
+.amount-label{
+    display:block;
+
+    margin-top:15px;
+
+    color:#999;
+    font-size:11px;
+    font-weight:700;
+}
+
+.amount-input{
+    width:100%;
+
+    margin-top:6px;
+
+    padding:12px 13px;
+
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    outline:none;
+
+    color:white;
+    background:#0e1013;
+
+    font-size:15px;
+}
+
+.amount-input:focus{
+    border-color:rgba(255,181,46,.5);
+    box-shadow:0 0 0 3px rgba(255,181,46,.07);
+}
+
+/* Mobile */
+
+@media(max-width:650px){
+
+    .app{
+        padding:12px 12px 35px;
+    }
+
+    .header{
+        top:8px;
+        border-radius:19px;
+    }
+
+    .welcome{
+        margin-top:25px;
+    }
+
+    .welcome h2{
+        font-size:26px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .stat:nth-child(3){
+        grid-column:1/-1;
+    }
+
+    .stat:nth-child(3) .stat-number{
+        font-size:27px;
+    }
+
+    .dashboard{
+        padding:10px;
+        border-radius:20px;
+    }
+
+    .actions{
+        flex-wrap:wrap;
+    }
+
+    .actions button{
+        min-width:45%;
+    }
+
+    .approve{
+        min-width:100%!important;
+        order:-1;
+    }
+
+    .screenshot{
+        height:360px;
+    }
+}
+
+@media(min-width:800px){
+
+    .list{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .card{
+        min-height:205px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+
+        <div class="brand">
+
+            <div class="logo">
+                CL
+            </div>
+
+            <div>
+                <h1>Civil Line Chanda</h1>
+                <p>Admin verification dashboard</p>
+            </div>
+
+        </div>
+
+        <button
+            class="notification"
+            onclick="enableNotifications()"
+            title="Notifications">
+            🔔
+        </button>
+
+    </header>
+
+
+    <section class="welcome">
+
+        <div class="small">
+            Admin dashboard
+        </div>
+
+        <h2>Good evening, Ashu.</h2>
+
+        <p>
+            Review incoming chanda payments and manage receipts.
+        </p>
+
+    </section>
+
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ⏳
+            </div>
+
+            <div class="stat-label">
+                Pending payments
+            </div>
+
+            <div
+                class="stat-number"
+                id="pendingCount">
+                2
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ✓
+            </div>
+
+            <div class="stat-label">
+                Approved
+            </div>
+
+            <div
+                class="stat-number"
+                id="approvedCount">
+                1
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ₹
+            </div>
+
+            <div class="stat-label">
+                Total approved amount
+            </div>
+
+            <div
+                class="stat-number"
+                id="totalAmount">
+                ₹500
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="dashboard">
+
+        <div class="tabs">
+
+            <button
+                class="tab active"
+                id="pendingTab"
+                onclick="switchTab('pending')">
+                Pending
+            </button>
+
+            <button
+                class="tab"
+                id="approvedTab"
+                onclick="switchTab('approved')">
+                Approved
+            </button>
+
+        </div>
+
+
+        <div
+            class="list"
+            id="paymentList">
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- PAYMENT MODAL -->
+
+<div
+    class="modal"
+    id="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-head">
+
+            <strong>
+                Verify payment
+            </strong>
+
+            <button
+                class="close"
+                onclick="closeModal()">
+                ✕
+            </button>
+
+        </div>
+
+
+        <div class="screenshot">
+
+            <div class="fake-receipt">
+
+                <div class="circle">
+                    ₹
+                </div>
+
+                <strong>
+                    PAYMENT
+                </strong>
+
+                <div class="fake-line"></div>
+                <div class="fake-line small"></div>
+                <div class="fake-line"></div>
+
+                <small>
+                    Screenshot preview
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-info">
+
+            <div
+                class="person"
+                id="modalPerson">
+            </div>
+
+            <div
+                class="details"
+                id="modalDetails">
+            </div>
+
+
+            <label class="amount-label">
+                Approved amount
+            </label>
+
+            <input
+                class="amount-input"
+                id="approvedAmount"
+                type="number"
+                min="1"
+                placeholder="Enter approved amount">
+
+
+            <div class="actions">
+
+                <button
+                    class="approve"
+                    onclick="approveCurrent()">
+                    ✓ APPROVE & SEND RECEIPT
+                </button>
+
+                <button
+                    class="keep"
+                    onclick="closeModal()">
+                    KEEP PENDING
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let currentTab = "pending";
+let currentId = null;
+
+
+/*
+    DEMO DATA
+    Later this will come from Google Sheets.
+*/
+
+let payments = [
+
+    {
+        id:1,
+        name:"Ayush Kumar",
+        email:"ayush@example.com",
+        amount:500,
+        date:"23 Sep 2026 · 10:21 PM",
+        status:"pending"
+    },
+
+    {
+        id:2,
+        name:"Rahul Kumar",
+        email:"rahul@example.com",
+        amount:251,
+        date:"23 Sep 2026 · 09:48 PM",
+        status:"pending"
+    },
+
+    {
+        id:3,
+        name:"Priya Kumari",
+        email:"priya@example.com",
+        amount:500,
+        date:"23 Sep 2026 · 08:16 PM",
+        status:"approved",
+        receipt:"GP-2026-001"
+    }
+
+];
+
+
+function render(){
+
+    const list =
+        document.getElementById("paymentList");
+
+
+    const filtered =
+        payments.filter(
+            p => p.status === currentTab
+        );
+
+
+    document.getElementById("pendingCount")
+        .textContent =
+        payments.filter(
+            p => p.status === "pending"
+        ).length;
+
+
+    document.getElementById("approvedCount")
+        .textContent =
+        payments.filter(
+            p => p.status === "approved"
+        ).length;
+
+
+    const total =
+        payments
+        .filter(
+            p => p.status === "approved"
+        )
+        .reduce(
+            (sum,p) =>
+                sum + Number(p.amount || 0),
+            0
+        );
+
+
+    document.getElementById("totalAmount")
+        .textContent =
+        "₹" +
+        total.toLocaleString("en-IN");
+
+
+    if(!filtered.length){
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ✓
+                </div>
+
+                <strong>
+                    Nothing here
+                </strong>
+
+                No payments in this section.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        filtered.map(
+            (p,index) => `
+
+            <article
+                class="card ${
+                    p.status === "approved"
+                    ? "approved-card"
+                    : ""
+                }"
+                style="animation-delay:${index * 70}ms">
+
+                <div class="card-top">
+
+                    <div>
+
+                        <div class="name">
+                            ${escapeHtml(p.name)}
+                        </div>
+
+                        <div class="email">
+                            ${escapeHtml(p.email)}
+                        </div>
+
+                    </div>
+
+
+                    <div cl

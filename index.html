@@ -1105,26 +1105,16 @@ async function login(){
   error.textContent = "";
 
   if(!password){
-
     error.textContent =
       "Please enter the admin password.";
-
     return;
-
   }
 
-
-  if(
-    API_URL.includes("PASTE_YOUR")
-  ){
-
+  if(API_URL.includes("PASTE_YOUR")){
     error.textContent =
       "Add your Apps Script Web App URL first.";
-
     return;
-
   }
-
 
   try{
 
@@ -1134,18 +1124,11 @@ async function login(){
         password
       );
 
-
-    if(
-      !result.success
-    ){
-
+    if(!result.success){
       error.textContent =
         "Incorrect password.";
-
       return;
-
     }
-
 
     adminPassword = password;
 
@@ -1162,19 +1145,30 @@ async function login(){
       .getElementById("app")
       .style.display = "block";
 
-
     pendingPayments =
       result.payments || [];
 
     previousPendingCount =
       pendingPayments.length;
 
-
-    await loadApproved();
-
     render();
 
     startAutoRefresh();
+
+    /*
+     * Load approved payments in the background.
+     * This no longer blocks the login screen.
+     */
+    loadApproved()
+      .then(() => {
+        render();
+      })
+      .catch(error => {
+        console.error(
+          "Could not load approved payments:",
+          error
+        );
+      });
 
   }catch(error){
 
@@ -1182,11 +1176,8 @@ async function login(){
 
     error.textContent =
       "Could not connect to the admin server.";
-
   }
-
 }
-
 
 /* =====================================================
    API

@@ -1621,91 +1621,64 @@ function openPayment(id){
    SCREENSHOT
 ===================================================== */
 
-function loadScreenshot(payment){
+async function loadScreenshot(payment){
 
   const box =
-    document
-      .getElementById("screenshotBox");
-
-
-  /*
-   * Google Forms normally stores the uploaded
-   * Drive link in column D.
-   *
-   * The link is displayed here when available.
-   */
-
-  if(!payment.screenshot){
-
-    box.innerHTML = `
-      <div class="no-image">
-        No payment screenshot was submitted.
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  const url =
-    extractUrl(payment.screenshot);
-
-
-  if(!url){
-
-    box.innerHTML = `
-      <div class="no-image">
-        Screenshot reference:
-        <br><br>
-        ${escapeHtml(payment.screenshot)}
-      </div>
-    `;
-
-    return;
-
-  }
-
+    document.getElementById("screenshotBox");
 
   box.innerHTML = `
-
-    <a
-      href="${escapeAttribute(url)}"
-      target="_blank"
-      rel="noopener noreferrer"
-      style="color:#d8b45c;text-decoration:none;"
-    >
-      OPEN PAYMENT SCREENSHOT
-      <br>
-      <small style="color:#777">
-        Open in Google Drive
-      </small>
-    </a>
-
+    <div class="no-image">
+      Loading payment screenshot...
+    </div>
   `;
 
+  try {
+
+    const url =
+      API_URL +
+      "?action=screenshot" +
+      "&password=" +
+      encodeURIComponent(adminPassword) +
+      "&row=" +
+      encodeURIComponent(payment.id);
+
+    const response =
+      await fetch(url, {
+        method: "GET",
+        cache: "no-store"
+      });
+
+    const result =
+      await response.json();
+
+    if (!result.success) {
+      throw new Error(
+        result.error || "Screenshot unavailable."
+      );
+    }
+
+    box.innerHTML = `
+      <img
+        src="data:${result.mimeType};base64,${result.data}"
+        alt="Payment screenshot"
+      >
+    `;
+
+  } catch (error) {
+
+    console.error(error);
+
+    box.innerHTML = `
+      <div class="no-image">
+        Could not load screenshot.
+        <br><br>
+        ${escapeHtml(error.message)}
+      </div>
+    `;
+
+  }
+
 }
-
-
-function extractUrl(value){
-
-  const text =
-    String(value || "");
-
-
-  const match =
-    text.match(
-      /https?:\/\/[^\s,]+/i
-    );
-
-
-  return match
-    ? match[0]
-    : "";
-
-}
-
-
 /* =====================================================
    CLOSE MODAL
 ===================================================== */

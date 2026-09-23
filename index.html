@@ -1285,4 +1285,317 @@ function render(){
                     </div>
 
 
-                    <div cl
+                    <div class="amount">
+                        ₹${Number(p.amount)
+                            .toLocaleString("en-IN")}
+                    </div>
+
+                </div>
+
+
+                <div class="meta">
+                    ◷ ${escapeHtml(p.date)}
+                </div>
+
+
+                <span
+                    class="status ${p.status}">
+
+                    ${
+                        p.status === "pending"
+                        ? "PENDING"
+                        : "APPROVED"
+                    }
+
+                </span>
+
+
+                ${
+                    p.status === "pending"
+
+                    ?
+
+                    `
+
+                    <div class="actions">
+
+                        <button
+                            class="view"
+                            onclick="openPayment(${p.id})">
+
+                            VIEW SCREENSHOT
+
+                        </button>
+
+
+                        <button
+                            class="approve"
+                            onclick="quickApprove(${p.id})">
+
+                            APPROVE
+
+                        </button>
+
+                    </div>
+
+                    `
+
+                    :
+
+                    `
+
+                    <div class="actions">
+
+                        <button
+                            class="receipt">
+
+                            ✓ Receipt:
+                            ${p.receipt || "Sent"}
+
+                        </button>
+
+                    </div>
+
+                    `
+                }
+
+            </article>
+
+        `
+        ).join("");
+
+}
+
+
+function switchTab(tab){
+
+    currentTab = tab;
+
+
+    document
+        .getElementById("pendingTab")
+        .classList
+        .toggle(
+            "active",
+            tab === "pending"
+        );
+
+
+    document
+        .getElementById("approvedTab")
+        .classList
+        .toggle(
+            "active",
+            tab === "approved"
+        );
+
+
+    render();
+
+}
+
+
+function openPayment(id){
+
+    const payment =
+        payments.find(
+            p => p.id === id
+        );
+
+
+    if(!payment) return;
+
+
+    currentId = id;
+
+
+    document
+        .getElementById("modalPerson")
+        .textContent =
+        payment.name;
+
+
+    document
+        .getElementById("modalDetails")
+        .textContent =
+        payment.email +
+        " · Submitted ₹" +
+        payment.amount;
+
+
+    document
+        .getElementById("approvedAmount")
+        .value =
+        payment.amount;
+
+
+    document
+        .getElementById("modal")
+        .classList
+        .add("show");
+
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById("modal")
+        .classList
+        .remove("show");
+
+    currentId = null;
+
+}
+
+
+function quickApprove(id){
+
+    currentId = id;
+
+
+    const payment =
+        payments.find(
+            p => p.id === id
+        );
+
+
+    if(!payment) return;
+
+
+    document
+        .getElementById("approvedAmount")
+        .value =
+        payment.amount;
+
+
+    approveCurrent();
+
+}
+
+
+function approveCurrent(){
+
+    const payment =
+        payments.find(
+            p => p.id === currentId
+        );
+
+
+    if(!payment) return;
+
+
+    const amount =
+        Number(
+            document
+                .getElementById("approvedAmount")
+                .value
+        );
+
+
+    if(!amount || amount <= 0){
+
+        alert(
+            "Enter a valid approved amount."
+        );
+
+        return;
+
+    }
+
+
+    payment.amount = amount;
+
+    payment.status = "approved";
+
+
+    payment.receipt =
+        "GP-2026-" +
+        String(
+            payments.filter(
+                p => p.status === "approved"
+            ).length
+        ).padStart(3,"0");
+
+
+    closeModal();
+
+
+    switchTab("approved");
+
+
+    setTimeout(() => {
+
+        alert(
+            "Demo approval complete.\n\n" +
+            "In the connected version:\n\n" +
+            "✓ Google Sheet will update\n" +
+            "✓ Receipt will be generated\n" +
+            "✓ PDF will be emailed\n" +
+            "✓ Payment will move to Approved"
+        );
+
+    },150);
+
+}
+
+
+function enableNotifications(){
+
+    if(!("Notification" in window)){
+
+        alert(
+            "This browser does not support notifications."
+        );
+
+        return;
+
+    }
+
+
+    Notification
+        .requestPermission()
+        .then(permission => {
+
+            if(permission === "granted"){
+
+                new Notification(
+                    "Civil Line Chanda",
+                    {
+                        body:
+                        "Admin notifications are enabled."
+                    }
+                );
+
+            }
+
+        });
+
+}
+
+
+function escapeHtml(text){
+
+    return String(text)
+        .replace(
+            /[&<>"']/g,
+            c => ({
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#039;"
+            }[c])
+        );
+
+}
+
+
+/* Initial render */
+
+render();
+
+</script>
+
+</body>
+</html>

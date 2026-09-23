@@ -3,1597 +3,2134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111111">
 
-<title>Civil Line Chanda Admin</title>
+<title>Civil Line Admin</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
-
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-:root{
-    --bg:#0d0e11;
-    --panel:#15171b;
-    --panel2:#1b1e23;
-    --text:#f6f6f6;
-    --muted:#8d929c;
-    --gold:#ffb52e;
-    --orange:#ff7a18;
-    --green:#42e695;
-    --red:#ff5c67;
-    --border:rgba(255,255,255,.08);
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 body{
-    min-height:100vh;
-    color:var(--text);
-    font-family:"DM Sans",sans-serif;
-    background:
-        radial-gradient(circle at 10% 0%,rgba(255,181,46,.13),transparent 30%),
-        radial-gradient(circle at 90% 20%,rgba(255,91,24,.09),transparent 28%),
-        var(--bg);
-    overflow-x:hidden;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#0d0d0d;
+  color:#f5f1e8;
+  min-height:100vh;
 }
 
-/* Ambient background */
-
-body::before{
-    content:"";
-    position:fixed;
-    width:420px;
-    height:420px;
-    border-radius:50%;
-    background:rgba(255,181,46,.04);
-    filter:blur(80px);
-    top:25%;
-    left:-180px;
-    pointer-events:none;
-    animation:floatGlow 8s ease-in-out infinite alternate;
-}
-
-body::after{
-    content:"";
-    position:fixed;
-    width:360px;
-    height:360px;
-    border-radius:50%;
-    background:rgba(255,100,30,.035);
-    filter:blur(80px);
-    right:-150px;
-    bottom:5%;
-    pointer-events:none;
-    animation:floatGlow 10s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes floatGlow{
-    from{transform:translateY(-25px)}
-    to{transform:translateY(25px)}
+button,
+input{
+  font:inherit;
 }
 
 button{
-    font-family:inherit;
-    cursor:pointer;
+  cursor:pointer;
 }
 
-.app{
-    width:min(1120px,100%);
-    margin:auto;
-    padding:18px 18px 50px;
+/* ================= LOGIN ================= */
+
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+  background:
+    radial-gradient(circle at top,#332a17 0%,transparent 35%),
+    #0d0d0d;
 }
 
-/* Header */
-
-.header{
-    position:sticky;
-    top:12px;
-    z-index:20;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    padding:17px 18px;
-
-    border:1px solid var(--border);
-    border-radius:24px;
-
-    background:rgba(21,23,27,.82);
-    backdrop-filter:blur(22px);
-
-    box-shadow:
-        0 18px 60px rgba(0,0,0,.35);
-
-    animation:slideDown .7s ease both;
-}
-
-@keyframes slideDown{
-    from{
-        opacity:0;
-        transform:translateY(-15px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:13px;
+.login-box{
+  width:100%;
+  max-width:420px;
+  background:#151515;
+  border:1px solid #302b20;
+  border-radius:24px;
+  padding:35px 28px;
+  box-shadow:0 25px 80px rgba(0,0,0,.55);
+  animation:fadeUp .5s ease;
 }
 
 .logo{
-    width:49px;
-    height:49px;
-
-    display:grid;
-    place-items:center;
-
-    border-radius:16px;
-
-    color:#111;
-
-    font-family:"Space Grotesk",sans-serif;
-    font-weight:800;
-
-    background:
-        linear-gradient(135deg,#ffd66b,#ff9f1c);
-
-    box-shadow:
-        0 7px 25px rgba(255,170,40,.22);
+  width:64px;
+  height:64px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 22px;
+  background:linear-gradient(135deg,#d9b45c,#80601d);
+  color:#15110a;
+  font-size:23px;
+  font-weight:900;
 }
 
-.brand h1{
-    font-family:"Space Grotesk",sans-serif;
-    font-size:18px;
-    letter-spacing:-.4px;
+.login-box h1{
+  text-align:center;
+  font-size:25px;
+  margin-bottom:8px;
 }
 
-.brand p{
-    margin-top:3px;
-    color:var(--muted);
-    font-size:11px;
+.login-box p{
+  text-align:center;
+  color:#8e8b84;
+  font-size:14px;
+  margin-bottom:28px;
 }
 
-.notification{
-    position:relative;
-
-    width:45px;
-    height:45px;
-
-    border:1px solid var(--border);
-    border-radius:15px;
-
-    color:white;
-    background:#1b1d22;
-
-    font-size:18px;
-
-    transition:.25s;
+.input{
+  width:100%;
+  padding:15px 16px;
+  background:#0d0d0d;
+  color:white;
+  border:1px solid #35322c;
+  border-radius:13px;
+  outline:none;
+  margin-bottom:14px;
 }
 
-.notification:hover{
-    transform:translateY(-2px);
-    border-color:rgba(255,181,46,.4);
+.input:focus{
+  border-color:#c9a653;
 }
 
-.notification::after{
-    content:"";
-    position:absolute;
-
-    width:8px;
-    height:8px;
-
-    top:8px;
-    right:8px;
-
-    background:#ff4e58;
-    border:2px solid #1b1d22;
-
-    border-radius:50%;
-
-    animation:pulse 1.7s infinite;
+.primary{
+  width:100%;
+  border:0;
+  border-radius:13px;
+  padding:15px;
+  background:linear-gradient(135deg,#d8b65f,#9b7729);
+  color:#17130a;
+  font-weight:800;
 }
 
-@keyframes pulse{
-    0%,100%{
-        box-shadow:0 0 0 0 rgba(255,78,88,.4);
-    }
-    50%{
-        box-shadow:0 0 0 6px rgba(255,78,88,0);
-    }
+.error{
+  color:#ff7777;
+  font-size:13px;
+  text-align:center;
+  min-height:20px;
+  margin-top:12px;
 }
 
-/* Welcome */
+/* ================= APP ================= */
+
+.app{
+  display:none;
+  min-height:100vh;
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:17px 5%;
+  background:rgba(13,13,13,.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid #25231f;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brand-logo{
+  width:43px;
+  height:43px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#d9b45c,#80601d);
+  color:#15110a;
+  font-weight:900;
+}
+
+.brand-text strong{
+  display:block;
+  font-size:15px;
+}
+
+.brand-text span{
+  color:#77746d;
+  font-size:11px;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.icon-btn{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  border:1px solid #302e29;
+  background:#171717;
+  color:#ddd;
+  position:relative;
+}
+
+.icon-btn:hover{
+  border-color:#a78948;
+}
+
+.dot{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:#e4bb58;
+  border-radius:50%;
+  top:8px;
+  right:8px;
+  display:none;
+}
+
+.logout{
+  padding:11px 14px;
+  border:1px solid #302e29;
+  border-radius:11px;
+  background:#171717;
+  color:#aaa;
+  font-size:12px;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+  width:min(1180px,90%);
+  margin:0 auto;
+  padding:45px 0 70px;
+}
 
 .welcome{
-    margin:32px 3px 18px;
-    animation:fadeUp .7s .1s ease both;
+  margin-bottom:30px;
 }
 
-.welcome .small{
-    color:var(--gold);
-    font-size:11px;
-    font-weight:800;
-    text-transform:uppercase;
-    letter-spacing:1.5px;
+.welcome small{
+  color:#77736a;
+  font-size:13px;
 }
 
-.welcome h2{
-    margin-top:5px;
-    font-family:"Space Grotesk",sans-serif;
-    font-size:30px;
-    letter-spacing:-1.3px;
+.welcome h1{
+  margin-top:6px;
+  font-size:32px;
+  letter-spacing:-.8px;
 }
 
 .welcome p{
-    margin-top:5px;
-    color:var(--muted);
-    font-size:13px;
+  margin-top:7px;
+  color:#77736a;
+  font-size:14px;
 }
 
-/* Stats */
+/* ================= STATS ================= */
 
 .stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-
-    margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:35px;
 }
 
 .stat{
-    position:relative;
-    overflow:hidden;
-
-    min-height:125px;
-
-    padding:18px;
-
-    border:1px solid var(--border);
-    border-radius:21px;
-
-    background:linear-gradient(
-        145deg,
-        rgba(255,255,255,.065),
-        rgba(255,255,255,.025)
-    );
-
-    box-shadow:0 15px 45px rgba(0,0,0,.18);
-
-    animation:fadeUp .7s ease both;
-
-    transition:.3s;
-}
-
-.stat:nth-child(2){
-    animation-delay:.08s;
-}
-
-.stat:nth-child(3){
-    animation-delay:.16s;
+  background:#151515;
+  border:1px solid #292722;
+  border-radius:18px;
+  padding:21px;
+  transition:.25s;
 }
 
 .stat:hover{
-    transform:translateY(-4px);
-    border-color:rgba(255,181,46,.22);
-}
-
-.stat::after{
-    content:"";
-    position:absolute;
-
-    width:90px;
-    height:90px;
-
-    border-radius:50%;
-
-    background:rgba(255,181,46,.09);
-
-    right:-30px;
-    bottom:-35px;
-
-    filter:blur(4px);
+  transform:translateY(-2px);
+  border-color:#4b412b;
 }
 
 .stat-label{
-    color:var(--muted);
-    font-size:11px;
-    font-weight:600;
+  color:#77736a;
+  font-size:12px;
 }
 
-.stat-number{
-    margin-top:8px;
-
-    font-family:"Space Grotesk",sans-serif;
-    font-size:30px;
-    font-weight:700;
-
-    letter-spacing:-1px;
+.stat-value{
+  font-size:27px;
+  font-weight:800;
+  margin-top:9px;
 }
 
-.stat-icon{
-    position:absolute;
-    top:17px;
-    right:17px;
-
-    width:31px;
-    height:31px;
-
-    display:grid;
-    place-items:center;
-
-    border-radius:10px;
-
-    background:rgba(255,255,255,.06);
-
-    font-size:13px;
+.gold{
+  color:#d8b45c;
 }
 
-/* Main panel */
+/* ================= TABS ================= */
 
-.dashboard{
-    margin-top:17px;
-
-    padding:15px;
-
-    border:1px solid var(--border);
-    border-radius:24px;
-
-    background:rgba(255,255,255,.025);
-
-    box-shadow:0 18px 55px rgba(0,0,0,.18);
-
-    animation:fadeUp .8s .25s ease both;
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:17px;
 }
 
-/* Tabs */
+.section-head h2{
+  font-size:19px;
+}
 
 .tabs{
-    display:flex;
-    gap:7px;
-
-    padding:5px;
-
-    border-radius:15px;
-
-    background:#0b0c0f;
-    border:1px solid var(--border);
+  display:flex;
+  gap:7px;
+  background:#151515;
+  border:1px solid #292722;
+  padding:5px;
+  border-radius:12px;
 }
 
 .tab{
-    flex:1;
-
-    border:0;
-    border-radius:11px;
-
-    padding:11px;
-
-    color:#777c85;
-    background:transparent;
-
-    font-weight:800;
-    font-size:12px;
-
-    transition:.25s;
+  border:0;
+  background:transparent;
+  color:#77736a;
+  padding:8px 14px;
+  border-radius:8px;
+  font-size:12px;
 }
 
 .tab.active{
-    color:#111;
-
-    background:
-        linear-gradient(135deg,#ffd66b,#ff9b20);
-
-    box-shadow:0 5px 18px rgba(255,170,40,.15);
+  background:#2a2519;
+  color:#e2bf69;
 }
 
-/* List */
+/* ================= PAYMENT CARDS ================= */
 
 .list{
-    display:grid;
-    gap:12px;
-    margin-top:14px;
+  display:grid;
+  gap:12px;
 }
 
-/* Payment card */
-
-.card{
-    position:relative;
-
-    padding:17px;
-
-    border:1px solid var(--border);
-    border-radius:21px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.065),
-            rgba(255,255,255,.025)
-        );
-
-    overflow:hidden;
-
-    animation:cardIn .55s ease both;
-
-    transition:
-        transform .25s,
-        border-color .25s,
-        background .25s;
+.payment{
+  background:#151515;
+  border:1px solid #292722;
+  border-radius:17px;
+  padding:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  animation:fadeUp .3s ease;
 }
 
-.card:hover{
-    transform:translateY(-3px);
-    border-color:rgba(255,181,46,.2);
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.085),
-            rgba(255,255,255,.03)
-        );
+.payment:hover{
+  border-color:#4a3d23;
 }
 
-@keyframes cardIn{
-    from{
-        opacity:0;
-        transform:translateY(12px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+.payment-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:0;
 }
 
-.card::before{
-    content:"";
-
-    position:absolute;
-
-    width:3px;
-    height:60%;
-
-    left:0;
-    top:20%;
-
-    border-radius:0 5px 5px 0;
-
-    background:var(--gold);
-
-    opacity:.8;
+.avatar{
+  width:46px;
+  height:46px;
+  flex:none;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#28231a;
+  color:#d7b25b;
+  font-weight:800;
 }
 
-.card.approved-card::before{
-    background:var(--green);
+.payment-info{
+  min-width:0;
 }
 
-.card-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:15px;
+.payment-info strong{
+  display:block;
+  font-size:15px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-.name{
-    font-size:16px;
-    font-weight:800;
-}
-
-.email{
-    margin-top:3px;
-
-    color:var(--muted);
-
-    font-size:11px;
-
-    word-break:break-word;
+.payment-info span{
+  display:block;
+  color:#74716a;
+  font-size:12px;
+  margin-top:4px;
 }
 
 .amount{
-    color:#fff;
-
-    font-family:"Space Grotesk",sans-serif;
-    font-size:21px;
-    font-weight:700;
-
-    white-space:nowrap;
+  color:#d8b45c;
+  font-weight:800;
+  white-space:nowrap;
 }
 
-.meta{
-    margin-top:12px;
-
-    display:flex;
-    align-items:center;
-    gap:6px;
-
-    color:#737983;
-
-    font-size:10px;
+.payment-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
 .status{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-
-    margin-top:12px;
-
-    padding:5px 9px;
-
-    border-radius:999px;
-
-    font-size:10px;
-    font-weight:800;
-    letter-spacing:.4px;
+  font-size:10px;
+  padding:6px 9px;
+  border-radius:20px;
+  background:#18301f;
+  color:#79c78c;
 }
 
-.status::before{
-    content:"";
-    width:5px;
-    height:5px;
-    border-radius:50%;
+.review{
+  border:1px solid #574825;
+  background:#201c13;
+  color:#dcb85f;
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:700;
 }
 
-.status.pending{
-    color:#ffc44e;
-    background:rgba(255,181,46,.1);
+.review:hover{
+  background:#302816;
 }
-
-.status.pending::before{
-    background:#ffb52e;
-    box-shadow:0 0 7px #ffb52e;
-}
-
-.status.approved{
-    color:#55e99c;
-    background:rgba(66,230,149,.1);
-}
-
-.status.approved::before{
-    background:#42e695;
-    box-shadow:0 0 7px #42e695;
-}
-
-/* Actions */
-
-.actions{
-    display:flex;
-    gap:8px;
-
-    margin-top:15px;
-}
-
-.actions button{
-    border:0;
-    border-radius:12px;
-
-    padding:11px 13px;
-
-    font-size:11px;
-    font-weight:800;
-
-    transition:.22s;
-}
-
-.view{
-    flex:1;
-
-    color:#ddd;
-    background:#22252a;
-
-    border:1px solid var(--border)!important;
-}
-
-.view:hover{
-    background:#2a2d33;
-}
-
-.approve{
-    flex:1.25;
-
-    color:#111;
-
-    background:
-        linear-gradient(135deg,#ffd66b,#ff951b);
-
-    box-shadow:
-        0 7px 20px rgba(255,158,30,.12);
-}
-
-.approve:hover{
-    transform:translateY(-2px);
-    box-shadow:
-        0 10px 25px rgba(255,158,30,.22);
-}
-
-.keep{
-    flex:1;
-
-    color:#aaa;
-    background:#1b1d21;
-}
-
-.receipt{
-    width:100%;
-
-    color:#55e99c;
-    background:rgba(66,230,149,.07);
-
-    border:1px solid rgba(66,230,149,.12)!important;
-}
-
-/* Empty */
 
 .empty{
-    padding:60px 20px;
-
-    text-align:center;
-
-    border:1px dashed rgba(255,255,255,.1);
-    border-radius:20px;
-
-    color:#777;
-
-    background:rgba(255,255,255,.015);
+  text-align:center;
+  padding:55px 20px;
+  border:1px dashed #302e29;
+  border-radius:17px;
+  color:#69665f;
 }
 
-.empty-icon{
-    font-size:28px;
-    margin-bottom:10px;
+.loading{
+  text-align:center;
+  padding:45px;
+  color:#77736a;
 }
 
-.empty strong{
-    display:block;
-    color:#ccc;
-    margin-bottom:4px;
-}
-
-/* Modal */
+/* ================= MODAL ================= */
 
 .modal{
-    position:fixed;
-    inset:0;
-
-    z-index:100;
-
-    display:none;
-    align-items:center;
-    justify-content:center;
-
-    padding:18px;
-
-    background:rgba(0,0,0,.72);
-
-    backdrop-filter:blur(12px);
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(8px);
 }
 
 .modal.show{
-    display:flex;
-    animation:modalFade .25s ease;
-}
-
-@keyframes modalFade{
-    from{opacity:0}
-    to{opacity:1}
+  display:flex;
 }
 
 .modal-box{
-    width:min(510px,100%);
-
-    overflow:hidden;
-
-    border:1px solid var(--border);
-    border-radius:24px;
-
-    background:#17191d;
-
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.55);
-
-    animation:modalUp .35s ease;
-}
-
-@keyframes modalUp{
-    from{
-        opacity:0;
-        transform:translateY(25px) scale(.97);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
+  width:min(620px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:#151515;
+  border:1px solid #39352c;
+  border-radius:22px;
+  animation:modalIn .25s ease;
 }
 
 .modal-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    padding:15px 17px;
-
-    border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:19px 21px;
+  border-bottom:1px solid #292722;
 }
 
 .modal-head strong{
-    font-size:14px;
+  font-size:16px;
 }
 
 .close{
-    width:35px;
-    height:35px;
-
-    border:0;
-    border-radius:10px;
-
-    color:#aaa;
-    background:#24262b;
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:9px;
+  background:#222;
+  color:#aaa;
 }
 
 .screenshot{
-    height:400px;
-
-    display:grid;
-    place-items:center;
-
-    background:
-        radial-gradient(circle at 50% 20%,rgba(255,181,46,.08),transparent 40%),
-        #0e0f12;
-
-    color:#777;
-
-    text-align:center;
+  margin:20px;
+  min-height:230px;
+  border:1px dashed #454037;
+  border-radius:15px;
+  background:#0e0e0e;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
 }
 
-.fake-receipt{
-    width:190px;
-    height:325px;
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-
-    gap:10px;
-
-    border-radius:8px;
-
-    color:#333;
-
-    background:#fff;
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.45);
-
-    transform:rotate(-1deg);
-
-    animation:receiptFloat 4s ease-in-out infinite;
+.screenshot img{
+  display:block;
+  max-width:100%;
+  max-height:400px;
+  object-fit:contain;
 }
 
-@keyframes receiptFloat{
-    0%,100%{transform:translateY(0) rotate(-1deg)}
-    50%{transform:translateY(-7px) rotate(1deg)}
-}
-
-.fake-receipt .circle{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#f2f2f2;
-}
-
-.fake-line{
-    width:115px;
-    height:7px;
-    border-radius:10px;
-    background:#eee;
-}
-
-.fake-line.small{
-    width:75px;
+.no-image{
+  color:#69665f;
+  font-size:13px;
+  padding:30px;
+  text-align:center;
 }
 
 .modal-info{
-    padding:17px;
+  padding:0 20px 22px;
 }
 
-.modal-info .person{
-    font-size:14px;
-    font-weight:800;
+.person{
+  font-size:20px;
+  font-weight:800;
 }
 
-.modal-info .details{
-    margin-top:3px;
-    color:#777d86;
-    font-size:11px;
+.details{
+  color:#77736a;
+  font-size:12px;
+  line-height:1.8;
+  margin-top:5px;
 }
 
 .amount-label{
-    display:block;
-
-    margin-top:15px;
-
-    color:#999;
-    font-size:11px;
-    font-weight:700;
+  display:block;
+  margin-top:18px;
+  color:#8a867d;
+  font-size:11px;
+  margin-bottom:7px;
 }
 
 .amount-input{
-    width:100%;
-
-    margin-top:6px;
-
-    padding:12px 13px;
-
-    border:1px solid var(--border);
-    border-radius:12px;
-
-    outline:none;
-
-    color:white;
-    background:#0e1013;
-
-    font-size:15px;
+  width:100%;
+  padding:13px;
+  background:#0d0d0d;
+  border:1px solid #35322c;
+  border-radius:11px;
+  color:white;
+  outline:none;
 }
 
 .amount-input:focus{
-    border-color:rgba(255,181,46,.5);
-    box-shadow:0 0 0 3px rgba(255,181,46,.07);
+  border-color:#c5a04d;
 }
 
-/* Mobile */
-
-@media(max-width:650px){
-
-    .app{
-        padding:12px 12px 35px;
-    }
-
-    .header{
-        top:8px;
-        border-radius:19px;
-    }
-
-    .welcome{
-        margin-top:25px;
-    }
-
-    .welcome h2{
-        font-size:26px;
-    }
-
-    .stats{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .stat:nth-child(3){
-        grid-column:1/-1;
-    }
-
-    .stat:nth-child(3) .stat-number{
-        font-size:27px;
-    }
-
-    .dashboard{
-        padding:10px;
-        border-radius:20px;
-    }
-
-    .actions{
-        flex-wrap:wrap;
-    }
-
-    .actions button{
-        min-width:45%;
-    }
-
-    .approve{
-        min-width:100%!important;
-        order:-1;
-    }
-
-    .screenshot{
-        height:360px;
-    }
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:15px;
 }
 
-@media(min-width:800px){
+.approve{
+  border:0;
+  border-radius:11px;
+  padding:14px;
+  background:linear-gradient(135deg,#d9b45c,#9b7729);
+  color:#15110a;
+  font-weight:800;
+  font-size:12px;
+}
 
-    .list{
-        grid-template-columns:1fr 1fr;
-    }
+.keep{
+  border:1px solid #35322c;
+  border-radius:11px;
+  padding:14px;
+  background:#1c1c1c;
+  color:#aaa;
+  font-weight:700;
+  font-size:12px;
+}
 
-    .card{
-        min-height:205px;
-    }
+/* ================= CONFIRM ================= */
+
+.confirm-box{
+  width:min(400px,100%);
+  background:#171717;
+  border:1px solid #3a3529;
+  border-radius:20px;
+  padding:27px;
+  animation:modalIn .2s ease;
+}
+
+.confirm-box h3{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.confirm-box p{
+  color:#8b877f;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.confirm-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:22px;
+}
+
+.cancel-btn{
+  border:1px solid #37342e;
+  border-radius:10px;
+  padding:13px;
+  background:#202020;
+  color:#aaa;
+}
+
+.confirm-btn{
+  border:0;
+  border-radius:10px;
+  padding:13px;
+  background:#d2ad55;
+  color:#17130a;
+  font-weight:800;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+  position:fixed;
+  z-index:200;
+  bottom:25px;
+  left:50%;
+  transform:translate(-50%,20px);
+  opacity:0;
+  pointer-events:none;
+  background:#222;
+  border:1px solid #3b362b;
+  color:#eee;
+  padding:13px 18px;
+  border-radius:12px;
+  font-size:12px;
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes modalIn{
+  from{
+    opacity:0;
+    transform:scale(.97) translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px){
+
+  .header{
+    padding:14px 4%;
+  }
+
+  .brand-text{
+    display:none;
+  }
+
+  .logout{
+    padding:9px 11px;
+  }
+
+  .main{
+    width:92%;
+    padding-top:30px;
+  }
+
+  .welcome h1{
+    font-size:27px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .stat{
+    padding:17px;
+  }
+
+  .section-head{
+    align-items:flex-start;
+    gap:12px;
+    flex-direction:column;
+  }
+
+  .payment{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .payment-right{
+    width:100%;
+    justify-content:space-between;
+  }
+
+  .actions{
+    grid-template-columns:1fr;
+  }
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- ================= LOGIN ================= -->
 
-    <header class="header">
+<section class="login-screen" id="loginScreen">
 
-        <div class="brand">
+  <div class="login-box">
 
-            <div class="logo">
-                CL
-            </div>
+    <div class="logo">CL</div>
 
-            <div>
-                <h1>Civil Line Chanda</h1>
-                <p>Admin verification dashboard</p>
-            </div>
+    <h1>Admin Dashboard</h1>
 
-        </div>
+    <p>
+      Civil Line Ganesh Puja Samiti
+    </p>
 
-        <button
-            class="notification"
-            onclick="enableNotifications()"
-            title="Notifications">
-            🔔
-        </button>
+    <input
+      id="password"
+      class="input"
+      type="password"
+      placeholder="Admin password"
+      autocomplete="current-password"
+    >
 
-    </header>
+    <button
+      class="primary"
+      onclick="login()"
+    >
+      SIGN IN
+    </button>
 
+    <div
+      class="error"
+      id="loginError"
+    ></div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= APP ================= -->
+
+<div class="app" id="app">
+
+  <header class="header">
+
+    <div class="brand">
+
+      <div class="brand-logo">
+        CL
+      </div>
+
+      <div class="brand-text">
+        <strong>Civil Line Admin</strong>
+        <span>Ganesh Puja Samiti</span>
+      </div>
+
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        class="icon-btn"
+        onclick="enableNotifications()"
+        title="Enable notifications"
+      >
+        🔔
+        <span
+          class="dot"
+          id="notificationDot"
+        ></span>
+      </button>
+
+      <button
+        class="logout"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <main class="main">
 
     <section class="welcome">
 
-        <div class="small">
-            Admin dashboard
-        </div>
+      <small>ADMIN CONTROL PANEL</small>
 
-        <h2>Good evening, Ashu.</h2>
+      <h1>
+        Good evening, Ashu.
+      </h1>
 
-        <p>
-            Review incoming chanda payments and manage receipts.
-        </p>
+      <p>
+        Review and approve incoming chanda payments.
+      </p>
 
     </section>
 
+
+    <!-- STATS -->
 
     <section class="stats">
 
-        <div class="stat">
+      <div class="stat">
 
-            <div class="stat-icon">
-                ⏳
-            </div>
-
-            <div class="stat-label">
-                Pending payments
-            </div>
-
-            <div
-                class="stat-number"
-                id="pendingCount">
-                2
-            </div>
-
+        <div class="stat-label">
+          Pending payments
         </div>
 
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                ✓
-            </div>
-
-            <div class="stat-label">
-                Approved
-            </div>
-
-            <div
-                class="stat-number"
-                id="approvedCount">
-                1
-            </div>
-
+        <div
+          class="stat-value"
+          id="pendingCount"
+        >
+          —
         </div>
 
+      </div>
 
-        <div class="stat">
 
-            <div class="stat-icon">
-                ₹
-            </div>
+      <div class="stat">
 
-            <div class="stat-label">
-                Total approved amount
-            </div>
-
-            <div
-                class="stat-number"
-                id="totalAmount">
-                ₹500
-            </div>
-
+        <div class="stat-label">
+          Approved payments
         </div>
+
+        <div
+          class="stat-value"
+          id="approvedCount"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-label">
+          Approved amount
+        </div>
+
+        <div
+          class="stat-value gold"
+          id="approvedTotal"
+        >
+          ₹0
+        </div>
+
+      </div>
 
     </section>
 
 
-    <section class="dashboard">
+    <!-- DASHBOARD -->
+
+    <section>
+
+      <div class="section-head">
+
+        <h2 id="sectionTitle">
+          Pending payments
+        </h2>
 
         <div class="tabs">
 
-            <button
-                class="tab active"
-                id="pendingTab"
-                onclick="switchTab('pending')">
-                Pending
-            </button>
+          <button
+            class="tab active"
+            id="pendingTab"
+            onclick="switchTab('pending')"
+          >
+            Pending
+          </button>
 
-            <button
-                class="tab"
-                id="approvedTab"
-                onclick="switchTab('approved')">
-                Approved
-            </button>
+          <button
+            class="tab"
+            id="approvedTab"
+            onclick="switchTab('approved')"
+          >
+            Approved
+          </button>
 
         </div>
 
+      </div>
 
-        <div
-            class="list"
-            id="paymentList">
+
+      <div
+        class="list"
+        id="paymentList"
+      >
+
+        <div class="loading">
+          Loading payments...
         </div>
+
+      </div>
 
     </section>
+
+  </main>
 
 </div>
 
 
-<!-- PAYMENT MODAL -->
+<!-- ================= PAYMENT MODAL ================= -->
 
 <div
-    class="modal"
-    id="modal">
+  class="modal"
+  id="modal"
+>
 
-    <div class="modal-box">
+  <div class="modal-box">
 
-        <div class="modal-head">
+    <div class="modal-head">
 
-            <strong>
-                Verify payment
-            </strong>
+      <strong>
+        Verify payment
+      </strong>
 
-            <button
-                class="close"
-                onclick="closeModal()">
-                ✕
-            </button>
-
-        </div>
-
-
-        <div class="screenshot">
-
-            <div class="fake-receipt">
-
-                <div class="circle">
-                    ₹
-                </div>
-
-                <strong>
-                    PAYMENT
-                </strong>
-
-                <div class="fake-line"></div>
-                <div class="fake-line small"></div>
-                <div class="fake-line"></div>
-
-                <small>
-                    Screenshot preview
-                </small>
-
-            </div>
-
-        </div>
-
-
-        <div class="modal-info">
-
-            <div
-                class="person"
-                id="modalPerson">
-            </div>
-
-            <div
-                class="details"
-                id="modalDetails">
-            </div>
-
-
-            <label class="amount-label">
-                Approved amount
-            </label>
-
-            <input
-                class="amount-input"
-                id="approvedAmount"
-                type="number"
-                min="1"
-                placeholder="Enter approved amount">
-
-
-            <div class="actions">
-
-                <button
-                    class="approve"
-                    onclick="approveCurrent()">
-                    ✓ APPROVE & SEND RECEIPT
-                </button>
-
-                <button
-                    class="keep"
-                    onclick="closeModal()">
-                    KEEP PENDING
-                </button>
-
-            </div>
-
-        </div>
+      <button
+        class="close"
+        onclick="closeModal()"
+      >
+        ✕
+      </button>
 
     </div>
 
+
+    <div
+      class="screenshot"
+      id="screenshotBox"
+    >
+      <div class="no-image">
+        Loading screenshot...
+      </div>
+    </div>
+
+
+    <div class="modal-info">
+
+      <div
+        class="person"
+        id="modalPerson"
+      >
+      </div>
+
+      <div
+        class="details"
+        id="modalDetails"
+      >
+      </div>
+
+
+      <label class="amount-label">
+        Approved amount
+      </label>
+
+      <input
+        class="amount-input"
+        id="approvedAmount"
+        type="number"
+        min="1"
+        placeholder="Enter approved amount"
+      >
+
+
+      <div class="actions">
+
+        <button
+          class="approve"
+          onclick="askApproval()"
+        >
+          ✓ APPROVE & SEND RECEIPT
+        </button>
+
+        <button
+          class="keep"
+          onclick="closeModal()"
+        >
+          KEEP PENDING
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================= CONFIRMATION ================= -->
+
+<div
+  class="modal"
+  id="confirmModal"
+>
+
+  <div class="confirm-box">
+
+    <h3>
+      Confirm approval
+    </h3>
+
+    <p id="confirmText">
+      Are you sure?
+    </p>
+
+    <div class="confirm-actions">
+
+      <button
+        class="cancel-btn"
+        onclick="closeConfirm()"
+      >
+        CANCEL
+      </button>
+
+      <button
+        class="confirm-btn"
+        onclick="confirmApproval()"
+      >
+        YES, APPROVE
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+
+<div
+  class="toast"
+  id="toast"
+>
 </div>
 
 
 <script>
 
-let currentTab = "pending";
-let currentId = null;
-
+/* =====================================================
+   CONFIGURATION
+===================================================== */
 
 /*
-    DEMO DATA
-    Later this will come from Google Sheets.
-*/
+ * PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE.
+ *
+ * Example:
+ * https://script.google.com/macros/s/XXXXXXXXXXXX/exec
+ */
 
-let payments = [
-
-    {
-        id:1,
-        name:"Ayush Kumar",
-        email:"ayush@example.com",
-        amount:500,
-        date:"23 Sep 2026 · 10:21 PM",
-        status:"pending"
-    },
-
-    {
-        id:2,
-        name:"Rahul Kumar",
-        email:"rahul@example.com",
-        amount:251,
-        date:"23 Sep 2026 · 09:48 PM",
-        status:"pending"
-    },
-
-    {
-        id:3,
-        name:"Priya Kumari",
-        email:"priya@example.com",
-        amount:500,
-        date:"23 Sep 2026 · 08:16 PM",
-        status:"approved",
-        receipt:"GP-2026-001"
-    }
-
-];
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbwbC-hjEiGfoj_qvzseESLcR_PFB0Xhvc0gccnioSBDzcQf7i1mhmSBGv9nrqDz2u6ojw/exec";
 
 
-function render(){
+/* =====================================================
+   STATE
+===================================================== */
 
-    const list =
-        document.getElementById("paymentList");
+let adminPassword = "";
 
+let currentTab = "pending";
 
-    const filtered =
-        payments.filter(
-            p => p.status === currentTab
-        );
+let currentPayment = null;
 
+let pendingPayments = [];
 
-    document.getElementById("pendingCount")
-        .textContent =
-        payments.filter(
-            p => p.status === "pending"
-        ).length;
+let approvedPayments = [];
 
+let previousPendingCount = 0;
 
-    document.getElementById("approvedCount")
-        .textContent =
-        payments.filter(
-            p => p.status === "approved"
-        ).length;
+let refreshTimer = null;
 
 
-    const total =
-        payments
-        .filter(
-            p => p.status === "approved"
-        )
-        .reduce(
-            (sum,p) =>
-                sum + Number(p.amount || 0),
-            0
-        );
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function login(){
+
+  const password =
+    document
+      .getElementById("password")
+      .value
+      .trim();
+
+  const error =
+    document
+      .getElementById("loginError");
+
+  error.textContent = "";
+
+  if(!password){
+
+    error.textContent =
+      "Please enter the admin password.";
+
+    return;
+
+  }
 
 
-    document.getElementById("totalAmount")
-        .textContent =
-        "₹" +
-        total.toLocaleString("en-IN");
+  if(
+    API_URL.includes("PASTE_YOUR")
+  ){
+
+    error.textContent =
+      "Add your Apps Script Web App URL first.";
+
+    return;
+
+  }
 
 
-    if(!filtered.length){
+  try{
 
-        list.innerHTML = `
+    const result =
+      await apiRequest(
+        "pending",
+        password
+      );
 
-            <div class="empty">
 
-                <div class="empty-icon">
-                    ✓
-                </div>
+    if(
+      !result.success
+    ){
 
-                <strong>
-                    Nothing here
-                </strong>
+      error.textContent =
+        "Incorrect password.";
 
-                No payments in this section.
+      return;
 
-            </div>
-
-        `;
-
-        return;
     }
 
 
-    list.innerHTML =
-        filtered.map(
-            (p,index) => `
+    adminPassword = password;
 
-            <article
-                class="card ${
-                    p.status === "approved"
-                    ? "approved-card"
-                    : ""
-                }"
-                style="animation-delay:${index * 70}ms">
-
-                <div class="card-top">
-
-                    <div>
-
-                        <div class="name">
-                            ${escapeHtml(p.name)}
-                        </div>
-
-                        <div class="email">
-                            ${escapeHtml(p.email)}
-                        </div>
-
-                    </div>
-
-
-                    <div class="amount">
-                        ₹${Number(p.amount)
-                            .toLocaleString("en-IN")}
-                    </div>
-
-                </div>
-
-
-                <div class="meta">
-                    ◷ ${escapeHtml(p.date)}
-                </div>
-
-
-                <span
-                    class="status ${p.status}">
-
-                    ${
-                        p.status === "pending"
-                        ? "PENDING"
-                        : "APPROVED"
-                    }
-
-                </span>
-
-
-                ${
-                    p.status === "pending"
-
-                    ?
-
-                    `
-
-                    <div class="actions">
-
-                        <button
-                            class="view"
-                            onclick="openPayment(${p.id})">
-
-                            VIEW SCREENSHOT
-
-                        </button>
-
-
-                        <button
-                            class="approve"
-                            onclick="quickApprove(${p.id})">
-
-                            APPROVE
-
-                        </button>
-
-                    </div>
-
-                    `
-
-                    :
-
-                    `
-
-                    <div class="actions">
-
-                        <button
-                            class="receipt">
-
-                            ✓ Receipt:
-                            ${p.receipt || "Sent"}
-
-                        </button>
-
-                    </div>
-
-                    `
-                }
-
-            </article>
-
-        `
-        ).join("");
-
-}
-
-
-function switchTab(tab){
-
-    currentTab = tab;
-
+    sessionStorage.setItem(
+      "adminLoggedIn",
+      "yes"
+    );
 
     document
-        .getElementById("pendingTab")
-        .classList
-        .toggle(
-            "active",
-            tab === "pending"
-        );
-
+      .getElementById("loginScreen")
+      .style.display = "none";
 
     document
-        .getElementById("approvedTab")
-        .classList
-        .toggle(
-            "active",
-            tab === "approved"
-        );
+      .getElementById("app")
+      .style.display = "block";
 
+
+    pendingPayments =
+      result.payments || [];
+
+    previousPendingCount =
+      pendingPayments.length;
+
+
+    await loadApproved();
 
     render();
 
+    startAutoRefresh();
+
+  }catch(error){
+
+    console.error(error);
+
+    error.textContent =
+      "Could not connect to the admin server.";
+
+  }
+
 }
 
+
+/* =====================================================
+   API
+===================================================== */
+
+async function apiRequest(
+  action,
+  password = adminPassword
+){
+
+  const url =
+    API_URL +
+    "?action=" +
+    encodeURIComponent(action) +
+    "&password=" +
+    encodeURIComponent(password);
+
+  const response =
+    await fetch(url, {
+      method:"GET",
+      cache:"no-store"
+    });
+
+
+  if(!response.ok){
+
+    throw new Error(
+      "Server returned " +
+      response.status
+    );
+
+  }
+
+
+  return await response.json();
+
+}
+
+
+/* =====================================================
+   LOAD DATA
+===================================================== */
+
+async function loadPending(){
+
+  const result =
+    await apiRequest("pending");
+
+  if(!result.success){
+
+    if(
+      result.error === "Unauthorized"
+    ){
+
+      logout();
+
+    }
+
+    throw new Error(
+      result.error || "Failed"
+    );
+
+  }
+
+
+  pendingPayments =
+    result.payments || [];
+
+}
+
+
+async function loadApproved(){
+
+  const result =
+    await apiRequest("approved");
+
+  if(!result.success){
+
+    throw new Error(
+      result.error || "Failed"
+    );
+
+  }
+
+
+  approvedPayments =
+    result.payments || [];
+
+}
+
+
+/* =====================================================
+   REFRESH
+===================================================== */
+
+async function refreshData(){
+
+  try{
+
+    const oldCount =
+      pendingPayments.length;
+
+    await loadPending();
+
+    await loadApproved();
+
+    const newCount =
+      pendingPayments.length;
+
+
+    if(
+      newCount > oldCount
+    ){
+
+      showNewPaymentNotification();
+
+    }
+
+
+    previousPendingCount =
+      newCount;
+
+    render();
+
+  }catch(error){
+
+    console.error(
+      "Refresh error:",
+      error
+    );
+
+  }
+
+}
+
+
+function startAutoRefresh(){
+
+  if(refreshTimer){
+    clearInterval(refreshTimer);
+  }
+
+  /*
+   * Checks the Sheet every 20 seconds
+   * while the dashboard is open.
+   */
+
+  refreshTimer =
+    setInterval(
+      refreshData,
+      20000
+    );
+
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function render(){
+
+  const list =
+    document
+      .getElementById("paymentList");
+
+
+  const payments =
+    currentTab === "pending"
+      ? pendingPayments
+      : approvedPayments;
+
+
+  document
+    .getElementById("pendingCount")
+    .textContent =
+      pendingPayments.length;
+
+
+  document
+    .getElementById("approvedCount")
+    .textContent =
+      approvedPayments.length;
+
+
+  const total =
+    approvedPayments.reduce(
+      (sum,p) =>
+        sum + Number(p.amount || 0),
+      0
+    );
+
+
+  document
+    .getElementById("approvedTotal")
+    .textContent =
+      "₹" +
+      total.toLocaleString("en-IN");
+
+
+  document
+    .getElementById("sectionTitle")
+    .textContent =
+      currentTab === "pending"
+        ? "Pending payments"
+        : "Approved payments";
+
+
+  document
+    .getElementById("pendingTab")
+    .classList.toggle(
+      "active",
+      currentTab === "pending"
+    );
+
+
+  document
+    .getElementById("approvedTab")
+    .classList.toggle(
+      "active",
+      currentTab === "approved"
+    );
+
+
+  if(!payments.length){
+
+    list.innerHTML = `
+      <div class="empty">
+        ${
+          currentTab === "pending"
+            ? "No pending payments."
+            : "No approved payments yet."
+        }
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    payments
+      .map(paymentCard)
+      .join("");
+
+}
+
+
+/* =====================================================
+   PAYMENT CARD
+===================================================== */
+
+function paymentCard(payment){
+
+  const name =
+    escapeHtml(
+      payment.name || "Unknown"
+    );
+
+
+  const initial =
+    name
+      .charAt(0)
+      .toUpperCase();
+
+
+  const amount =
+    Number(payment.amount || 0)
+      .toLocaleString("en-IN");
+
+
+  const button =
+    currentTab === "pending"
+      ? `
+        <button
+          class="review"
+          onclick="openPayment(${payment.id})"
+        >
+          REVIEW
+        </button>
+      `
+      : `
+        <button
+          class="review"
+          onclick="openPayment(${payment.id})"
+        >
+          VIEW
+        </button>
+      `;
+
+
+  return `
+
+    <div class="payment">
+
+      <div class="payment-left">
+
+        <div class="avatar">
+          ${initial}
+        </div>
+
+        <div class="payment-info">
+
+          <strong>
+            ${name}
+          </strong>
+
+          <span>
+            ${escapeHtml(payment.email || "")}
+          </span>
+
+          <span>
+            ${escapeHtml(payment.timestamp || "")}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="payment-right">
+
+        <div class="amount">
+          ₹${amount}
+        </div>
+
+        ${
+          currentTab === "approved"
+            ? `<div class="status">APPROVED</div>`
+            : ""
+        }
+
+        ${button}
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+function switchTab(tab){
+
+  currentTab = tab;
+
+  render();
+
+}
+
+
+/* =====================================================
+   OPEN PAYMENT
+===================================================== */
 
 function openPayment(id){
 
-    const payment =
-        payments.find(
-            p => p.id === id
-        );
+  const source =
+    currentTab === "pending"
+      ? pendingPayments
+      : approvedPayments;
 
 
-    if(!payment) return;
+  const payment =
+    source.find(
+      item =>
+        Number(item.id) === Number(id)
+    );
 
 
-    currentId = id;
+  if(!payment){
+    return;
+  }
 
 
-    document
-        .getElementById("modalPerson")
-        .textContent =
-        payment.name;
+  currentPayment =
+    payment;
 
 
-    document
-        .getElementById("modalDetails")
-        .textContent =
-        payment.email +
-        " · Submitted ₹" +
-        payment.amount;
+  document
+    .getElementById("modalPerson")
+    .textContent =
+      payment.name || "Unknown";
 
 
-    document
-        .getElementById("approvedAmount")
-        .value =
-        payment.amount;
+  document
+    .getElementById("modalDetails")
+    .innerHTML =
+      `
+        Email:
+        ${escapeHtml(payment.email || "—")}
+        <br>
+
+        Submitted:
+        ${escapeHtml(payment.timestamp || "—")}
+        <br>
+
+        Submitted amount:
+        ₹${Number(payment.amount || 0).toLocaleString("en-IN")}
+
+        ${
+          payment.status === "APPROVED"
+            ? "<br>Status: APPROVED"
+            : ""
+        }
+      `;
 
 
-    document
-        .getElementById("modal")
-        .classList
-        .add("show");
+  document
+    .getElementById("approvedAmount")
+    .value =
+      payment.amount || "";
+
+
+  loadScreenshot(payment);
+
+
+  document
+    .getElementById("modal")
+    .classList.add("show");
 
 }
 
+
+/* =====================================================
+   SCREENSHOT
+===================================================== */
+
+function loadScreenshot(payment){
+
+  const box =
+    document
+      .getElementById("screenshotBox");
+
+
+  /*
+   * Google Forms normally stores the uploaded
+   * Drive link in column D.
+   *
+   * The link is displayed here when available.
+   */
+
+  if(!payment.screenshot){
+
+    box.innerHTML = `
+      <div class="no-image">
+        No payment screenshot was submitted.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  const url =
+    extractUrl(payment.screenshot);
+
+
+  if(!url){
+
+    box.innerHTML = `
+      <div class="no-image">
+        Screenshot reference:
+        <br><br>
+        ${escapeHtml(payment.screenshot)}
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML = `
+
+    <a
+      href="${escapeAttribute(url)}"
+      target="_blank"
+      rel="noopener noreferrer"
+      style="color:#d8b45c;text-decoration:none;"
+    >
+      OPEN PAYMENT SCREENSHOT
+      <br>
+      <small style="color:#777">
+        Open in Google Drive
+      </small>
+    </a>
+
+  `;
+
+}
+
+
+function extractUrl(value){
+
+  const text =
+    String(value || "");
+
+
+  const match =
+    text.match(
+      /https?:\/\/[^\s,]+/i
+    );
+
+
+  return match
+    ? match[0]
+    : "";
+
+}
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
 
 function closeModal(){
 
-    document
-        .getElementById("modal")
-        .classList
-        .remove("show");
+  document
+    .getElementById("modal")
+    .classList.remove("show");
 
-    currentId = null;
+  currentPayment = null;
 
 }
 
 
-function quickApprove(id){
+function closeConfirm(){
 
-    currentId = id;
+  document
+    .getElementById("confirmModal")
+    .classList.remove("show");
 
-
-    const payment =
-        payments.find(
-            p => p.id === id
-        );
+}
 
 
-    if(!payment) return;
+/* =====================================================
+   APPROVAL - STEP 1
+===================================================== */
+
+function askApproval(){
+
+  if(!currentPayment){
+
+    return;
+
+  }
 
 
-    document
+  const amount =
+    Number(
+      document
         .getElementById("approvedAmount")
-        .value =
-        payment.amount;
+        .value
+    );
 
 
-    approveCurrent();
+  if(
+    !isFinite(amount) ||
+    amount <= 0
+  ){
+
+    showToast(
+      "Enter a valid approved amount."
+    );
+
+    return;
+
+  }
+
+
+  document
+    .getElementById("confirmText")
+    .innerHTML =
+      `
+        You are about to approve
+        <strong style="color:#d8b45c">
+          ₹${amount.toLocaleString("en-IN")}
+        </strong>
+        for
+        <strong>
+          ${escapeHtml(currentPayment.name)}
+        </strong>.
+
+        <br><br>
+
+        The receipt workflow will be triggered
+        after approval.
+      `;
+
+
+  document
+    .getElementById("confirmModal")
+    .classList.add("show");
 
 }
 
 
-function approveCurrent(){
+/* =====================================================
+   APPROVAL - STEP 2
+===================================================== */
 
-    const payment =
-        payments.find(
-            p => p.id === currentId
-        );
+async function confirmApproval(){
 
+  if(!currentPayment){
 
-    if(!payment) return;
+    return;
 
-
-    const amount =
-        Number(
-            document
-                .getElementById("approvedAmount")
-                .value
-        );
+  }
 
 
-    if(!amount || amount <= 0){
+  const amount =
+    Number(
+      document
+        .getElementById("approvedAmount")
+        .value
+    );
 
-        alert(
-            "Enter a valid approved amount."
-        );
 
-        return;
+  if(
+    !isFinite(amount) ||
+    amount <= 0
+  ){
+
+    showToast(
+      "Invalid approved amount."
+    );
+
+    return;
+
+  }
+
+
+  const button =
+    document.querySelector(
+      ".confirm-btn"
+    );
+
+
+  button.disabled = true;
+
+  button.textContent =
+    "APPROVING...";
+
+
+  try{
+
+    /*
+     * This endpoint is handled below by the
+     * Apps Script backend.
+     */
+
+    const url =
+      API_URL +
+      "?action=approve" +
+      "&password=" +
+      encodeURIComponent(adminPassword) +
+      "&row=" +
+      encodeURIComponent(currentPayment.id) +
+      "&amount=" +
+      encodeURIComponent(amount);
+
+
+    const response =
+      await fetch(
+        url,
+        {
+          method:"GET",
+          cache:"no-store"
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.error ||
+        "Approval failed."
+      );
 
     }
 
 
-    payment.amount = amount;
-
-    payment.status = "approved";
-
-
-    payment.receipt =
-        "GP-2026-" +
-        String(
-            payments.filter(
-                p => p.status === "approved"
-            ).length
-        ).padStart(3,"0");
-
+    closeConfirm();
 
     closeModal();
 
+    showToast(
+      "Payment approved successfully."
+    );
 
-    switchTab("approved");
+
+    await refreshData();
 
 
-    setTimeout(() => {
+  }catch(error){
 
-        alert(
-            "Demo approval complete.\n\n" +
-            "In the connected version:\n\n" +
-            "✓ Google Sheet will update\n" +
-            "✓ Receipt will be generated\n" +
-            "✓ PDF will be emailed\n" +
-            "✓ Payment will move to Approved"
-        );
+    console.error(error);
 
-    },150);
+    showToast(
+      error.message ||
+      "Approval failed."
+    );
+
+  }finally{
+
+    button.disabled = false;
+
+    button.textContent =
+      "YES, APPROVE";
+
+  }
 
 }
 
 
-function enableNotifications(){
+/* =====================================================
+   NOTIFICATIONS
+===================================================== */
 
-    if(!("Notification" in window)){
+async function enableNotifications(){
 
-        alert(
-            "This browser does not support notifications."
-        );
+  if(
+    !("Notification" in window)
+  ){
 
-        return;
+    showToast(
+      "Browser notifications are not supported."
+    );
+
+    return;
+
+  }
+
+
+  const permission =
+    await Notification.requestPermission();
+
+
+  if(
+    permission === "granted"
+  ){
+
+    showToast(
+      "Notifications enabled."
+    );
+
+    new Notification(
+      "Civil Line Admin",
+      {
+        body:
+          "Payment notifications are enabled."
+      }
+    );
+
+  }else{
+
+    showToast(
+      "Notification permission was not granted."
+    );
+
+  }
+
+}
+
+
+function showNewPaymentNotification(){
+
+  document
+    .getElementById("notificationDot")
+    .style.display =
+      "block";
+
+
+  if(
+    "Notification" in window &&
+    Notification.permission === "granted"
+  ){
+
+    new Notification(
+      "New Chanda Payment",
+      {
+        body:
+          "A new payment is waiting for verification."
+      }
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout(){
+
+  adminPassword = "";
+
+  sessionStorage.removeItem(
+    "adminLoggedIn"
+  );
+
+
+  if(refreshTimer){
+
+    clearInterval(
+      refreshTimer
+    );
+
+    refreshTimer = null;
+
+  }
+
+
+  document
+    .getElementById("app")
+    .style.display = "none";
+
+
+  document
+    .getElementById("loginScreen")
+    .style.display = "flex";
+
+
+  document
+    .getElementById("password")
+    .value = "";
+
+
+  document
+    .getElementById("loginError")
+    .textContent = "";
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(message){
+
+  const toast =
+    document
+      .getElementById("toast");
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  setTimeout(
+    () =>
+      toast.classList.remove("show"),
+    2800
+  );
+
+}
+
+
+/* =====================================================
+   SECURITY / HTML ESCAPING
+===================================================== */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+  return String(value ?? "")
+    .replace(/"/g,"&quot;")
+    .replace(/</g,"%3C")
+    .replace(/>/g,"%3E");
+
+}
+
+
+/* =====================================================
+   ENTER KEY LOGIN
+===================================================== */
+
+document
+  .getElementById("password")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if(event.key === "Enter"){
+
+        login();
+
+      }
 
     }
+  );
 
 
-    Notification
-        .requestPermission()
-        .then(permission => {
+/* =====================================================
+   START
+===================================================== */
 
-            if(permission === "granted"){
+if(
+  sessionStorage.getItem(
+    "adminLoggedIn"
+  ) === "yes"
+){
 
-                new Notification(
-                    "Civil Line Chanda",
-                    {
-                        body:
-                        "Admin notifications are enabled."
-                    }
-                );
-
-            }
-
-        });
-
-}
-
-
-function escapeHtml(text){
-
-    return String(text)
-        .replace(
-            /[&<>"']/g,
-            c => ({
-                "&":"&amp;",
-                "<":"&lt;",
-                ">":"&gt;",
-                '"':"&quot;",
-                "'":"&#039;"
-            }[c])
-        );
+  /*
+   * We deliberately do NOT restore the password
+   * from localStorage/sessionStorage.
+   *
+   * The admin must log in again after a page
+   * reload. This prevents the password itself
+   * from being stored in the browser.
+   */
 
 }
-
-
-/* Initial render */
-
-render();
 
 </script>
 

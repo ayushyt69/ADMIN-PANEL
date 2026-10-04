@@ -103,6 +103,22 @@ button{
   background:linear-gradient(135deg,#d8b65f,#9b7729);
   color:#17130a;
   font-weight:800;
+  transition:.2s ease;
+}
+
+.primary:hover{
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+}
+
+.primary:active{
+  transform:scale(.98);
+}
+
+.primary:disabled{
+  opacity:.65;
+  cursor:wait;
+  transform:none;
 }
 
 .error{
@@ -199,6 +215,11 @@ button{
   background:#171717;
   color:#aaa;
   font-size:12px;
+}
+
+.logout:hover{
+  border-color:#a78948;
+  color:#ddd;
 }
 
 /* ================= MAIN ================= */
@@ -731,6 +752,7 @@ button{
 
     <button
       class="primary"
+      id="loginButton"
       onclick="login()"
     >
       SIGN IN
@@ -1056,13 +1078,6 @@ button{
    CONFIGURATION
 ===================================================== */
 
-/*
- * PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE.
- *
- * Example:
- * https://script.google.com/macros/s/XXXXXXXXXXXX/exec
- */
-
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwbC-hjEiGfoj_qvzseESLcR_PFB0Xhvc0gccnioSBDzcQf7i1mhmSBGv9nrqDz2u6ojw/exec";
 
@@ -1072,18 +1087,13 @@ const API_URL =
 ===================================================== */
 
 let adminPassword = "";
-
 let currentTab = "pending";
-
 let currentPayment = null;
-
 let pendingPayments = [];
-
 let approvedPayments = [];
-
 let previousPendingCount = 0;
-
 let refreshTimer = null;
+let loginInProgress = false;
 
 
 /* =====================================================
@@ -1091,6 +1101,10 @@ let refreshTimer = null;
 ===================================================== */
 
 async function login(){
+
+  if(loginInProgress){
+    return;
+  }
 
   const password =
     document
@@ -1101,6 +1115,10 @@ async function login(){
   const error =
     document
       .getElementById("loginError");
+
+  const loginButton =
+    document
+      .getElementById("loginButton");
 
   error.textContent = "";
 
@@ -1116,8 +1134,18 @@ async function login(){
     return;
   }
 
+  loginInProgress = true;
+
+  loginButton.disabled = true;
+  loginButton.textContent = "VERIFYING...";
+
   try{
 
+    /*
+     * The password is verified by Apps Script.
+     * This is the only request that must complete
+     * before access is granted.
+     */
     const result =
       await apiRequest(
         "pending",
@@ -1125,11 +1153,16 @@ async function login(){
       );
 
     if(!result.success){
+
       error.textContent =
         "Incorrect password.";
+
       return;
     }
 
+    /*
+     * Authentication succeeded.
+     */
     adminPassword = password;
 
     sessionStorage.setItem(
@@ -1137,6 +1170,10 @@ async function login(){
       "yes"
     );
 
+    /*
+     * Open the dashboard immediately after
+     * successful authentication.
+     */
     document
       .getElementById("loginScreen")
       .style.display = "none";
@@ -1145,6 +1182,10 @@ async function login(){
       .getElementById("app")
       .style.display = "block";
 
+    /*
+     * Use the already-fetched pending data.
+     * No second request is made here.
+     */
     pendingPayments =
       result.payments || [];
 
@@ -1153,11 +1194,15 @@ async function login(){
 
     render();
 
+    /*
+     * Start refreshing only after the dashboard
+     * has become visible.
+     */
     startAutoRefresh();
 
     /*
-     * Load approved payments in the background.
-     * This no longer blocks the login screen.
+     * Approved payments are intentionally loaded
+     * in the background and never block login.
      */
     loadApproved()
       .then(() => {
@@ -1176,8 +1221,17 @@ async function login(){
 
     error.textContent =
       "Could not connect to the admin server.";
+
+  }finally{
+
+    loginInProgress = false;
+
+    loginButton.disabled = false;
+    loginButton.textContent = "SIGN IN";
+
   }
 }
+
 
 /* =====================================================
    API
@@ -1201,7 +1255,6 @@ async function apiRequest(
       cache:"no-store"
     });
 
-
   if(!response.ok){
 
     throw new Error(
@@ -1210,7 +1263,6 @@ async function apiRequest(
     );
 
   }
-
 
   return await response.json();
 
@@ -1242,7 +1294,6 @@ async function loadPending(){
 
   }
 
-
   pendingPayments =
     result.payments || [];
 
@@ -1261,7 +1312,6 @@ async function loadApproved(){
     );
 
   }
-
 
   approvedPayments =
     result.payments || [];
@@ -1287,7 +1337,6 @@ async function refreshData(){
     const newCount =
       pendingPayments.length;
 
-
     if(
       newCount > oldCount
     ){
@@ -1295,7 +1344,6 @@ async function refreshData(){
       showNewPaymentNotification();
 
     }
-
 
     previousPendingCount =
       newCount;
@@ -1320,11 +1368,6 @@ function startAutoRefresh(){
     clearInterval(refreshTimer);
   }
 
-  /*
-   * Checks the Sheet every 20 seconds
-   * while the dashboard is open.
-   */
-
   refreshTimer =
     setInterval(
       refreshData,
@@ -1344,24 +1387,20 @@ function render(){
     document
       .getElementById("paymentList");
 
-
   const payments =
     currentTab === "pending"
       ? pendingPayments
       : approvedPayments;
-
 
   document
     .getElementById("pendingCount")
     .textContent =
       pendingPayments.length;
 
-
   document
     .getElementById("approvedCount")
     .textContent =
       approvedPayments.length;
-
 
   const total =
     approvedPayments.reduce(
@@ -1370,13 +1409,11 @@ function render(){
       0
     );
 
-
   document
     .getElementById("approvedTotal")
     .textContent =
       "₹" +
       total.toLocaleString("en-IN");
-
 
   document
     .getElementById("sectionTitle")
@@ -1385,7 +1422,6 @@ function render(){
         ? "Pending payments"
         : "Approved payments";
 
-
   document
     .getElementById("pendingTab")
     .classList.toggle(
@@ -1393,14 +1429,12 @@ function render(){
       currentTab === "pending"
     );
 
-
   document
     .getElementById("approvedTab")
     .classList.toggle(
       "active",
       currentTab === "approved"
     );
-
 
   if(!payments.length){
 
@@ -1417,7 +1451,6 @@ function render(){
     return;
 
   }
-
 
   list.innerHTML =
     payments
@@ -1438,17 +1471,14 @@ function paymentCard(payment){
       payment.name || "Unknown"
     );
 
-
   const initial =
     name
       .charAt(0)
       .toUpperCase();
 
-
   const amount =
     Number(payment.amount || 0)
       .toLocaleString("en-IN");
-
 
   const button =
     currentTab === "pending"
@@ -1468,7 +1498,6 @@ function paymentCard(payment){
           VIEW
         </button>
       `;
-
 
   return `
 
@@ -1546,28 +1575,23 @@ function openPayment(id){
       ? pendingPayments
       : approvedPayments;
 
-
   const payment =
     source.find(
       item =>
         Number(item.id) === Number(id)
     );
 
-
   if(!payment){
     return;
   }
 
-
   currentPayment =
     payment;
-
 
   document
     .getElementById("modalPerson")
     .textContent =
       payment.name || "Unknown";
-
 
   document
     .getElementById("modalDetails")
@@ -1591,15 +1615,12 @@ function openPayment(id){
         }
       `;
 
-
   document
     .getElementById("approvedAmount")
     .value =
       payment.amount || "";
 
-
   loadScreenshot(payment);
-
 
   document
     .getElementById("modal")
@@ -1670,6 +1691,8 @@ async function loadScreenshot(payment){
   }
 
 }
+
+
 /* =====================================================
    CLOSE MODAL
 ===================================================== */
@@ -1701,11 +1724,8 @@ function closeConfirm(){
 function askApproval(){
 
   if(!currentPayment){
-
     return;
-
   }
-
 
   const amount =
     Number(
@@ -1713,7 +1733,6 @@ function askApproval(){
         .getElementById("approvedAmount")
         .value
     );
-
 
   if(
     !isFinite(amount) ||
@@ -1727,7 +1746,6 @@ function askApproval(){
     return;
 
   }
-
 
   document
     .getElementById("confirmText")
@@ -1748,7 +1766,6 @@ function askApproval(){
         after approval.
       `;
 
-
   document
     .getElementById("confirmModal")
     .classList.add("show");
@@ -1763,11 +1780,8 @@ function askApproval(){
 async function confirmApproval(){
 
   if(!currentPayment){
-
     return;
-
   }
-
 
   const amount =
     Number(
@@ -1775,7 +1789,6 @@ async function confirmApproval(){
         .getElementById("approvedAmount")
         .value
     );
-
 
   if(
     !isFinite(amount) ||
@@ -1790,25 +1803,17 @@ async function confirmApproval(){
 
   }
 
-
   const button =
     document.querySelector(
       ".confirm-btn"
     );
-
 
   button.disabled = true;
 
   button.textContent =
     "APPROVING...";
 
-
   try{
-
-    /*
-     * This endpoint is handled below by the
-     * Apps Script backend.
-     */
 
     const url =
       API_URL +
@@ -1820,7 +1825,6 @@ async function confirmApproval(){
       "&amount=" +
       encodeURIComponent(amount);
 
-
     const response =
       await fetch(
         url,
@@ -1830,10 +1834,8 @@ async function confirmApproval(){
         }
       );
 
-
     const result =
       await response.json();
-
 
     if(!result.success){
 
@@ -1844,7 +1846,6 @@ async function confirmApproval(){
 
     }
 
-
     closeConfirm();
 
     closeModal();
@@ -1853,9 +1854,7 @@ async function confirmApproval(){
       "Payment approved successfully."
     );
 
-
     await refreshData();
-
 
   }catch(error){
 
@@ -1896,10 +1895,8 @@ async function enableNotifications(){
 
   }
 
-
   const permission =
     await Notification.requestPermission();
-
 
   if(
     permission === "granted"
@@ -1935,7 +1932,6 @@ function showNewPaymentNotification(){
     .style.display =
       "block";
 
-
   if(
     "Notification" in window &&
     Notification.permission === "granted"
@@ -1961,11 +1957,11 @@ function showNewPaymentNotification(){
 function logout(){
 
   adminPassword = "";
+  loginInProgress = false;
 
   sessionStorage.removeItem(
     "adminLoggedIn"
   );
-
 
   if(refreshTimer){
 
@@ -1977,25 +1973,29 @@ function logout(){
 
   }
 
-
   document
     .getElementById("app")
     .style.display = "none";
-
 
   document
     .getElementById("loginScreen")
     .style.display = "flex";
 
-
   document
     .getElementById("password")
     .value = "";
 
-
   document
     .getElementById("loginError")
     .textContent = "";
+
+  document
+    .getElementById("loginButton")
+    .disabled = false;
+
+  document
+    .getElementById("loginButton")
+    .textContent = "SIGN IN";
 
 }
 
@@ -2010,15 +2010,12 @@ function showToast(message){
     document
       .getElementById("toast");
 
-
   toast.textContent =
     message;
-
 
   toast.classList.add(
     "show"
   );
-
 
   setTimeout(
     () =>
@@ -2066,9 +2063,7 @@ document
     event => {
 
       if(event.key === "Enter"){
-
         login();
-
       }
 
     }
@@ -2086,12 +2081,9 @@ if(
 ){
 
   /*
-   * We deliberately do NOT restore the password
-   * from localStorage/sessionStorage.
-   *
-   * The admin must log in again after a page
-   * reload. This prevents the password itself
-   * from being stored in the browser.
+   * Password is deliberately not restored.
+   * The admin must authenticate again after
+   * a page reload.
    */
 
 }

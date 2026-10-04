@@ -13,11 +13,56 @@
   padding:0;
 }
 
+:root{
+  --bg:#090b16;
+  --panel:#111526;
+  --panel2:#151a30;
+  --border:#29304d;
+  --text:#f5f7ff;
+  --muted:#858da9;
+  --gold:#ffc857;
+  --orange:#ff8c42;
+  --pink:#ff5c8a;
+  --blue:#61a8ff;
+  --green:#55d98a;
+  --red:#ff6262;
+}
+
 body{
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#0d0d0d;
-  color:#f5f1e8;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(97,168,255,.16),transparent 25%),
+    radial-gradient(circle at 90% 15%,rgba(255,92,138,.13),transparent 25%),
+    radial-gradient(circle at 50% 100%,rgba(255,200,87,.12),transparent 30%),
+    var(--bg);
+  color:var(--text);
   min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    linear-gradient(115deg,transparent 20%,rgba(255,255,255,.025) 50%,transparent 80%);
+  animation:backgroundMove 10s linear infinite;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  right:-180px;
+  bottom:-180px;
+  background:rgba(255,140,66,.08);
+  filter:blur(60px);
+  pointer-events:none;
+  animation:floatOrb 8s ease-in-out infinite;
 }
 
 button,
@@ -37,88 +82,186 @@ button{
   align-items:center;
   justify-content:center;
   padding:25px;
-  background:
-    radial-gradient(circle at top,#332a17 0%,transparent 35%),
-    #0d0d0d;
+  position:relative;
+  overflow:hidden;
+}
+
+.login-screen::before,
+.login-screen::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+}
+
+.login-screen::before{
+  width:340px;
+  height:340px;
+  top:-170px;
+  left:-120px;
+  background:radial-gradient(circle,rgba(97,168,255,.22),transparent 68%);
+  animation:loginOrb 6s ease-in-out infinite;
+}
+
+.login-screen::after{
+  width:360px;
+  height:360px;
+  right:-150px;
+  bottom:-180px;
+  background:radial-gradient(circle,rgba(255,92,138,.18),transparent 68%);
+  animation:loginOrb 7s ease-in-out infinite reverse;
 }
 
 .login-box{
   width:100%;
-  max-width:420px;
-  background:#151515;
-  border:1px solid #302b20;
-  border-radius:24px;
-  padding:35px 28px;
-  box-shadow:0 25px 80px rgba(0,0,0,.55);
-  animation:fadeUp .5s ease;
+  max-width:430px;
+  position:relative;
+  z-index:2;
+  padding:38px 30px 32px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),
+    rgba(15,19,36,.94);
+  border:1px solid rgba(255,200,87,.2);
+  border-radius:28px;
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.55),
+    0 0 60px rgba(97,168,255,.06);
+  backdrop-filter:blur(22px);
+  animation:loginAppear .8s cubic-bezier(.2,.8,.2,1);
+}
+
+.login-box::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:28px;
+  padding:1px;
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(97,168,255,.55),
+    rgba(255,200,87,.5),
+    rgba(255,92,138,.5),
+    transparent
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:.45;
+  animation:borderRotate 5s linear infinite;
+  pointer-events:none;
 }
 
 .logo{
-  width:64px;
-  height:64px;
-  border-radius:18px;
+  width:76px;
+  height:76px;
+  border-radius:22px;
   display:flex;
   align-items:center;
   justify-content:center;
-  margin:0 auto 22px;
-  background:linear-gradient(135deg,#d9b45c,#80601d);
+  margin:0 auto 23px;
+  background:
+    linear-gradient(135deg,#ffc857,#ff8c42 55%,#ff5c8a);
   color:#15110a;
-  font-size:23px;
-  font-weight:900;
+  font-size:25px;
+  font-weight:950;
+  box-shadow:
+    0 12px 35px rgba(255,140,66,.25),
+    0 0 30px rgba(255,200,87,.12);
+  animation:logoFloat 3s ease-in-out infinite;
 }
 
 .login-box h1{
   text-align:center;
-  font-size:25px;
+  font-size:27px;
+  letter-spacing:-.6px;
   margin-bottom:8px;
 }
 
 .login-box p{
   text-align:center;
-  color:#8e8b84;
+  color:var(--muted);
   font-size:14px;
   margin-bottom:28px;
+}
+
+.security-line{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:7px;
+  margin:-12px 0 22px;
+  color:#6fda99;
+  font-size:10px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+}
+
+.security-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 12px var(--green);
+  animation:statusPulse 1.5s infinite;
 }
 
 .input{
   width:100%;
   padding:15px 16px;
-  background:#0d0d0d;
+  background:rgba(5,7,14,.8);
   color:white;
-  border:1px solid #35322c;
-  border-radius:13px;
+  border:1px solid #303751;
+  border-radius:14px;
   outline:none;
   margin-bottom:14px;
+  transition:.25s ease;
+}
+
+.input::placeholder{
+  color:#5f6680;
 }
 
 .input:focus{
-  border-color:#c9a653;
+  border-color:var(--blue);
+  box-shadow:
+    0 0 0 3px rgba(97,168,255,.09),
+    0 0 25px rgba(97,168,255,.08);
+  transform:translateY(-1px);
 }
 
 .primary{
   width:100%;
   border:0;
-  border-radius:13px;
+  border-radius:14px;
   padding:15px;
-  background:linear-gradient(135deg,#d8b65f,#9b7729);
-  color:#17130a;
-  font-weight:800;
-  transition:.2s ease;
+  background:linear-gradient(
+    110deg,
+    var(--blue),
+    #8c7cff,
+    var(--pink),
+    var(--orange)
+  );
+  background-size:300% 100%;
+  color:white;
+  font-weight:900;
+  letter-spacing:.8px;
+  box-shadow:0 12px 30px rgba(97,168,255,.18);
+  animation:gradientMove 5s linear infinite;
+  transition:.25s ease;
 }
 
 .primary:hover{
-  filter:brightness(1.08);
-  transform:translateY(-1px);
+  transform:translateY(-3px);
+  box-shadow:
+    0 16px 35px rgba(97,168,255,.25),
+    0 0 25px rgba(255,92,138,.12);
 }
 
 .primary:active{
-  transform:scale(.98);
-}
-
-.primary:disabled{
-  opacity:.65;
-  cursor:wait;
-  transform:none;
+  transform:scale(.97);
 }
 
 .error{
@@ -134,6 +277,7 @@ button{
 .app{
   display:none;
   min-height:100vh;
+  animation:appReveal .5s ease;
 }
 
 .header{
@@ -143,10 +287,10 @@ button{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:17px 5%;
-  background:rgba(13,13,13,.88);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid #25231f;
+  padding:16px 5%;
+  background:rgba(9,11,22,.76);
+  backdrop-filter:blur(22px);
+  border-bottom:1px solid rgba(255,255,255,.07);
 }
 
 .brand{
@@ -156,15 +300,17 @@ button{
 }
 
 .brand-logo{
-  width:43px;
-  height:43px;
-  border-radius:13px;
+  width:45px;
+  height:45px;
+  border-radius:14px;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:linear-gradient(135deg,#d9b45c,#80601d);
+  background:linear-gradient(135deg,var(--gold),var(--orange),var(--pink));
   color:#15110a;
-  font-weight:900;
+  font-weight:950;
+  box-shadow:0 8px 25px rgba(255,140,66,.16);
+  animation:logoFloat 3.5s ease-in-out infinite;
 }
 
 .brand-text strong{
@@ -173,7 +319,7 @@ button{
 }
 
 .brand-text span{
-  color:#77746d;
+  color:#747c97;
   font-size:11px;
 }
 
@@ -187,39 +333,47 @@ button{
   width:42px;
   height:42px;
   border-radius:12px;
-  border:1px solid #302e29;
-  background:#171717;
+  border:1px solid #30364f;
+  background:#14182a;
   color:#ddd;
   position:relative;
+  transition:.25s ease;
 }
 
 .icon-btn:hover{
-  border-color:#a78948;
+  border-color:var(--blue);
+  color:white;
+  transform:translateY(-2px);
+  box-shadow:0 8px 25px rgba(97,168,255,.12);
 }
 
 .dot{
   position:absolute;
   width:8px;
   height:8px;
-  background:#e4bb58;
+  background:var(--pink);
   border-radius:50%;
-  top:8px;
-  right:8px;
+  top:7px;
+  right:7px;
   display:none;
+  box-shadow:0 0 12px var(--pink);
+  animation:statusPulse 1s infinite;
 }
 
 .logout{
-  padding:11px 14px;
-  border:1px solid #302e29;
+  padding:11px 15px;
+  border:1px solid #30364f;
   border-radius:11px;
-  background:#171717;
+  background:#14182a;
   color:#aaa;
   font-size:12px;
+  transition:.25s ease;
 }
 
 .logout:hover{
-  border-color:#a78948;
-  color:#ddd;
+  color:white;
+  border-color:#ff6262;
+  background:rgba(255,98,98,.08);
 }
 
 /* ================= MAIN ================= */
@@ -227,27 +381,39 @@ button{
 .main{
   width:min(1180px,90%);
   margin:0 auto;
-  padding:45px 0 70px;
+  padding:48px 0 75px;
 }
 
 .welcome{
   margin-bottom:30px;
+  position:relative;
 }
 
 .welcome small{
-  color:#77736a;
-  font-size:13px;
+  color:var(--blue);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:2px;
 }
 
 .welcome h1{
-  margin-top:6px;
-  font-size:32px;
-  letter-spacing:-.8px;
+  margin-top:7px;
+  font-size:34px;
+  letter-spacing:-1px;
+  background:linear-gradient(
+    100deg,
+    #fff,
+    #dce8ff 45%,
+    #ffc857
+  );
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
 .welcome p{
-  margin-top:7px;
-  color:#77736a;
+  margin-top:8px;
+  color:#777f99;
   font-size:14px;
 }
 
@@ -261,31 +427,61 @@ button{
 }
 
 .stat{
-  background:#151515;
-  border:1px solid #292722;
-  border-radius:18px;
-  padding:21px;
-  transition:.25s;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
+    var(--panel);
+  border:1px solid #292f48;
+  border-radius:19px;
+  padding:22px;
+  transition:.3s ease;
+}
+
+.stat::before{
+  content:"";
+  position:absolute;
+  width:120px;
+  height:120px;
+  right:-60px;
+  top:-60px;
+  border-radius:50%;
+  background:rgba(97,168,255,.08);
+  filter:blur(5px);
+  transition:.3s;
+}
+
+.stat:nth-child(2)::before{
+  background:rgba(85,217,138,.08);
+}
+
+.stat:nth-child(3)::before{
+  background:rgba(255,200,87,.1);
 }
 
 .stat:hover{
-  transform:translateY(-2px);
-  border-color:#4b412b;
+  transform:translateY(-5px);
+  border-color:#475170;
+  box-shadow:0 15px 35px rgba(0,0,0,.2);
+}
+
+.stat:hover::before{
+  transform:scale(1.5);
 }
 
 .stat-label{
-  color:#77736a;
+  color:#777f99;
   font-size:12px;
 }
 
 .stat-value{
-  font-size:27px;
-  font-weight:800;
+  font-size:28px;
+  font-weight:850;
   margin-top:9px;
 }
 
 .gold{
-  color:#d8b45c;
+  color:var(--gold);
 }
 
 /* ================= TABS ================= */
@@ -304,24 +500,30 @@ button{
 .tabs{
   display:flex;
   gap:7px;
-  background:#151515;
-  border:1px solid #292722;
+  background:#111526;
+  border:1px solid #292f48;
   padding:5px;
-  border-radius:12px;
+  border-radius:13px;
 }
 
 .tab{
   border:0;
   background:transparent;
-  color:#77736a;
+  color:#777f99;
   padding:8px 14px;
-  border-radius:8px;
+  border-radius:9px;
   font-size:12px;
+  transition:.25s ease;
+}
+
+.tab:hover{
+  color:white;
 }
 
 .tab.active{
-  background:#2a2519;
-  color:#e2bf69;
+  background:linear-gradient(135deg,#252d49,#332c1c);
+  color:#ffc857;
+  box-shadow:0 5px 18px rgba(0,0,0,.2);
 }
 
 /* ================= PAYMENT CARDS ================= */
@@ -332,19 +534,44 @@ button{
 }
 
 .payment{
-  background:#151515;
-  border:1px solid #292722;
-  border-radius:17px;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.012)),
+    var(--panel);
+  border:1px solid #292f48;
+  border-radius:18px;
   padding:18px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:15px;
-  animation:fadeUp .3s ease;
+  animation:fadeUp .35s ease both;
+  transition:.28s ease;
+}
+
+.payment::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-120%;
+  width:55%;
+  height:100%;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.045),
+    transparent
+  );
+  transform:skewX(-20deg);
+  animation:cardShine 6s ease-in-out infinite;
+  pointer-events:none;
 }
 
 .payment:hover{
-  border-color:#4a3d23;
+  border-color:#475170;
+  transform:translateY(-3px);
+  box-shadow:0 15px 35px rgba(0,0,0,.2);
 }
 
 .payment-left{
@@ -355,16 +582,18 @@ button{
 }
 
 .avatar{
-  width:46px;
-  height:46px;
+  width:47px;
+  height:47px;
   flex:none;
   border-radius:14px;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:#28231a;
-  color:#d7b25b;
+  background:
+    linear-gradient(135deg,rgba(97,168,255,.16),rgba(255,92,138,.12));
+  color:#d7e4ff;
   font-weight:800;
+  border:1px solid rgba(97,168,255,.16);
 }
 
 .payment-info{
@@ -381,14 +610,14 @@ button{
 
 .payment-info span{
   display:block;
-  color:#74716a;
+  color:#747c97;
   font-size:12px;
   margin-top:4px;
 }
 
 .amount{
-  color:#d8b45c;
-  font-weight:800;
+  color:var(--gold);
+  font-weight:850;
   white-space:nowrap;
 }
 
@@ -402,36 +631,41 @@ button{
   font-size:10px;
   padding:6px 9px;
   border-radius:20px;
-  background:#18301f;
-  color:#79c78c;
+  background:rgba(85,217,138,.1);
+  color:var(--green);
+  border:1px solid rgba(85,217,138,.15);
 }
 
 .review{
-  border:1px solid #574825;
-  background:#201c13;
+  border:1px solid rgba(255,200,87,.25);
+  background:rgba(255,200,87,.06);
   color:#dcb85f;
   padding:10px 14px;
   border-radius:10px;
   font-size:11px;
-  font-weight:700;
+  font-weight:750;
+  transition:.25s ease;
 }
 
 .review:hover{
-  background:#302816;
+  background:var(--gold);
+  color:#17130a;
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(255,200,87,.16);
 }
 
 .empty{
   text-align:center;
   padding:55px 20px;
-  border:1px dashed #302e29;
-  border-radius:17px;
-  color:#69665f;
+  border:1px dashed #30364f;
+  border-radius:18px;
+  color:#696f84;
 }
 
 .loading{
   text-align:center;
   padding:45px;
-  color:#77736a;
+  color:#777f99;
 }
 
 /* ================= MODAL ================= */
@@ -444,22 +678,26 @@ button{
   align-items:center;
   justify-content:center;
   padding:20px;
-  background:rgba(0,0,0,.78);
-  backdrop-filter:blur(8px);
+  background:rgba(2,4,10,.78);
+  backdrop-filter:blur(14px);
 }
 
 .modal.show{
   display:flex;
+  animation:modalBackdrop .25s ease;
 }
 
 .modal-box{
   width:min(620px,100%);
   max-height:92vh;
   overflow:auto;
-  background:#151515;
-  border:1px solid #39352c;
-  border-radius:22px;
-  animation:modalIn .25s ease;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
+    #111526;
+  border:1px solid #3b4260;
+  border-radius:24px;
+  box-shadow:0 30px 100px rgba(0,0,0,.55);
+  animation:modalIn .3s cubic-bezier(.2,.8,.2,1);
 }
 
 .modal-head{
@@ -467,7 +705,7 @@ button{
   justify-content:space-between;
   align-items:center;
   padding:19px 21px;
-  border-bottom:1px solid #292722;
+  border-bottom:1px solid #292f48;
 }
 
 .modal-head strong{
@@ -479,16 +717,23 @@ button{
   height:34px;
   border:0;
   border-radius:9px;
-  background:#222;
+  background:#20263a;
   color:#aaa;
+  transition:.2s;
+}
+
+.close:hover{
+  color:white;
+  background:#303852;
+  transform:rotate(90deg);
 }
 
 .screenshot{
   margin:20px;
   min-height:230px;
-  border:1px dashed #454037;
+  border:1px dashed #454d69;
   border-radius:15px;
-  background:#0e0e0e;
+  background:#090c16;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -503,7 +748,7 @@ button{
 }
 
 .no-image{
-  color:#69665f;
+  color:#696f84;
   font-size:13px;
   padding:30px;
   text-align:center;
@@ -519,7 +764,7 @@ button{
 }
 
 .details{
-  color:#77736a;
+  color:#777f99;
   font-size:12px;
   line-height:1.8;
   margin-top:5px;
@@ -528,7 +773,7 @@ button{
 .amount-label{
   display:block;
   margin-top:18px;
-  color:#8a867d;
+  color:#8a91a6;
   font-size:11px;
   margin-bottom:7px;
 }
@@ -536,15 +781,17 @@ button{
 .amount-input{
   width:100%;
   padding:13px;
-  background:#0d0d0d;
-  border:1px solid #35322c;
+  background:#090c16;
+  border:1px solid #353c56;
   border-radius:11px;
   color:white;
   outline:none;
+  transition:.25s;
 }
 
 .amount-input:focus{
-  border-color:#c5a04d;
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(255,200,87,.07);
 }
 
 .actions{
@@ -558,31 +805,46 @@ button{
   border:0;
   border-radius:11px;
   padding:14px;
-  background:linear-gradient(135deg,#d9b45c,#9b7729);
-  color:#15110a;
-  font-weight:800;
+  background:linear-gradient(110deg,var(--green),#b4df62,var(--gold));
+  background-size:220% 100%;
+  color:#10160d;
+  font-weight:850;
   font-size:12px;
+  transition:.25s;
+}
+
+.approve:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(85,217,138,.18);
+  animation:gradientMove 2s linear infinite;
 }
 
 .keep{
-  border:1px solid #35322c;
+  border:1px solid #353c56;
   border-radius:11px;
   padding:14px;
-  background:#1c1c1c;
+  background:#191e30;
   color:#aaa;
   font-weight:700;
   font-size:12px;
+  transition:.25s;
+}
+
+.keep:hover{
+  color:white;
+  border-color:#59617d;
 }
 
 /* ================= CONFIRM ================= */
 
 .confirm-box{
   width:min(400px,100%);
-  background:#171717;
-  border:1px solid #3a3529;
-  border-radius:20px;
+  background:#151a2b;
+  border:1px solid #414967;
+  border-radius:22px;
   padding:27px;
-  animation:modalIn .2s ease;
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+  animation:modalIn .25s ease;
 }
 
 .confirm-box h3{
@@ -591,7 +853,7 @@ button{
 }
 
 .confirm-box p{
-  color:#8b877f;
+  color:#8b92a8;
   font-size:13px;
   line-height:1.6;
 }
@@ -604,20 +866,31 @@ button{
 }
 
 .cancel-btn{
-  border:1px solid #37342e;
+  border:1px solid #373e56;
   border-radius:10px;
   padding:13px;
-  background:#202020;
+  background:#202538;
   color:#aaa;
+  transition:.2s;
+}
+
+.cancel-btn:hover{
+  color:white;
 }
 
 .confirm-btn{
   border:0;
   border-radius:10px;
   padding:13px;
-  background:#d2ad55;
+  background:linear-gradient(135deg,var(--gold),var(--orange));
   color:#17130a;
-  font-weight:800;
+  font-weight:850;
+  transition:.2s;
+}
+
+.confirm-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(255,140,66,.18);
 }
 
 /* ================= TOAST ================= */
@@ -630,12 +903,13 @@ button{
   transform:translate(-50%,20px);
   opacity:0;
   pointer-events:none;
-  background:#222;
-  border:1px solid #3b362b;
+  background:#151a2b;
+  border:1px solid #3b4260;
   color:#eee;
   padding:13px 18px;
   border-radius:12px;
   font-size:12px;
+  box-shadow:0 15px 40px rgba(0,0,0,.35);
   transition:.3s;
 }
 
@@ -644,12 +918,23 @@ button{
   transform:translate(-50%,0);
 }
 
-/* ================= ANIMATION ================= */
+/* ================= ANIMATIONS ================= */
 
-@keyframes fadeUp{
+@keyframes loginAppear{
   from{
     opacity:0;
-    transform:translateY(10px);
+    transform:translateY(25px) scale(.97);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@keyframes appReveal{
+  from{
+    opacity:0;
+    transform:translateY(8px);
   }
   to{
     opacity:1;
@@ -657,14 +942,110 @@ button{
   }
 }
 
+@keyframes logoFloat{
+  0%,100%{
+    transform:translateY(0) rotate(0);
+  }
+  50%{
+    transform:translateY(-5px) rotate(1deg);
+  }
+}
+
+@keyframes loginOrb{
+  0%,100%{
+    transform:translate(0,0) scale(1);
+  }
+  50%{
+    transform:translate(25px,20px) scale(1.08);
+  }
+}
+
+@keyframes backgroundMove{
+  0%{
+    transform:translateX(-8%);
+  }
+  50%{
+    transform:translateX(8%);
+  }
+  100%{
+    transform:translateX(-8%);
+  }
+}
+
+@keyframes borderRotate{
+  0%{
+    transform:rotate(0deg);
+  }
+  100%{
+    transform:rotate(360deg);
+  }
+}
+
+@keyframes gradientMove{
+  0%{
+    background-position:0% 50%;
+  }
+  50%{
+    background-position:100% 50%;
+  }
+  100%{
+    background-position:0% 50%;
+  }
+}
+
+@keyframes statusPulse{
+  0%,100%{
+    transform:scale(1);
+    opacity:1;
+  }
+  50%{
+    transform:scale(1.35);
+    opacity:.55;
+  }
+}
+
+@keyframes cardShine{
+  0%,65%{
+    left:-120%;
+  }
+  82%,100%{
+    left:135%;
+  }
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(12px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes modalBackdrop{
+  from{opacity:0}
+  to{opacity:1}
+}
+
 @keyframes modalIn{
   from{
     opacity:0;
-    transform:scale(.97) translateY(8px);
+    transform:scale(.94) translateY(15px);
   }
   to{
     opacity:1;
     transform:scale(1) translateY(0);
+  }
+}
+
+@keyframes floatOrb{
+  0%,100%{
+    transform:translate(0,0);
+  }
+  50%{
+    transform:translate(-40px,-30px);
   }
 }
 
@@ -723,6 +1104,18 @@ button{
   }
 
 }
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    scroll-behavior:auto !important;
+  }
+
+}
 </style>
 </head>
 
@@ -742,6 +1135,11 @@ button{
       Civil Line Ganesh Puja Samiti
     </p>
 
+    <div class="security-line">
+      <span class="security-dot"></span>
+      Private administrative access
+    </div>
+
     <input
       id="password"
       class="input"
@@ -752,7 +1150,6 @@ button{
 
     <button
       class="primary"
-      id="loginButton"
       onclick="login()"
     >
       SIGN IN
@@ -817,7 +1214,7 @@ button{
 
     <section class="welcome">
 
-      <small>ADMIN CONTROL PANEL</small>
+      <small>PRIVATE ADMINISTRATION</small>
 
       <h1>
         Good evening, Ashu.
@@ -1093,7 +1490,6 @@ let pendingPayments = [];
 let approvedPayments = [];
 let previousPendingCount = 0;
 let refreshTimer = null;
-let loginInProgress = false;
 
 
 /* =====================================================
@@ -1101,10 +1497,6 @@ let loginInProgress = false;
 ===================================================== */
 
 async function login(){
-
-  if(loginInProgress){
-    return;
-  }
 
   const password =
     document
@@ -1115,10 +1507,6 @@ async function login(){
   const error =
     document
       .getElementById("loginError");
-
-  const loginButton =
-    document
-      .getElementById("loginButton");
 
   error.textContent = "";
 
@@ -1134,18 +1522,8 @@ async function login(){
     return;
   }
 
-  loginInProgress = true;
-
-  loginButton.disabled = true;
-  loginButton.textContent = "VERIFYING...";
-
   try{
 
-    /*
-     * The password is verified by Apps Script.
-     * This is the only request that must complete
-     * before access is granted.
-     */
     const result =
       await apiRequest(
         "pending",
@@ -1153,16 +1531,11 @@ async function login(){
       );
 
     if(!result.success){
-
       error.textContent =
         "Incorrect password.";
-
       return;
     }
 
-    /*
-     * Authentication succeeded.
-     */
     adminPassword = password;
 
     sessionStorage.setItem(
@@ -1170,10 +1543,6 @@ async function login(){
       "yes"
     );
 
-    /*
-     * Open the dashboard immediately after
-     * successful authentication.
-     */
     document
       .getElementById("loginScreen")
       .style.display = "none";
@@ -1182,10 +1551,6 @@ async function login(){
       .getElementById("app")
       .style.display = "block";
 
-    /*
-     * Use the already-fetched pending data.
-     * No second request is made here.
-     */
     pendingPayments =
       result.payments || [];
 
@@ -1194,16 +1559,8 @@ async function login(){
 
     render();
 
-    /*
-     * Start refreshing only after the dashboard
-     * has become visible.
-     */
     startAutoRefresh();
 
-    /*
-     * Approved payments are intentionally loaded
-     * in the background and never block login.
-     */
     loadApproved()
       .then(() => {
         render();
@@ -1221,14 +1578,6 @@ async function login(){
 
     error.textContent =
       "Could not connect to the admin server.";
-
-  }finally{
-
-    loginInProgress = false;
-
-    loginButton.disabled = false;
-    loginButton.textContent = "SIGN IN";
-
   }
 }
 
@@ -1250,7 +1599,7 @@ async function apiRequest(
     encodeURIComponent(password);
 
   const response =
-    await fetch(url, {
+    await fetch(url,{
       method:"GET",
       cache:"no-store"
     });
@@ -1527,7 +1876,6 @@ function paymentCard(payment){
 
       </div>
 
-
       <div class="payment-right">
 
         <div class="amount">
@@ -1655,17 +2003,18 @@ async function loadScreenshot(payment){
       encodeURIComponent(payment.id);
 
     const response =
-      await fetch(url, {
-        method: "GET",
-        cache: "no-store"
+      await fetch(url,{
+        method:"GET",
+        cache:"no-store"
       });
 
     const result =
       await response.json();
 
-    if (!result.success) {
+    if(!result.success){
       throw new Error(
-        result.error || "Screenshot unavailable."
+        result.error ||
+        "Screenshot unavailable."
       );
     }
 
@@ -1676,7 +2025,7 @@ async function loadScreenshot(payment){
       >
     `;
 
-  } catch (error) {
+  }catch(error){
 
     console.error(error);
 
@@ -1752,7 +2101,7 @@ function askApproval(){
     .innerHTML =
       `
         You are about to approve
-        <strong style="color:#d8b45c">
+        <strong style="color:#ffc857">
           ₹${amount.toLocaleString("en-IN")}
         </strong>
         for
@@ -1957,7 +2306,6 @@ function showNewPaymentNotification(){
 function logout(){
 
   adminPassword = "";
-  loginInProgress = false;
 
   sessionStorage.removeItem(
     "adminLoggedIn"
@@ -1988,14 +2336,6 @@ function logout(){
   document
     .getElementById("loginError")
     .textContent = "";
-
-  document
-    .getElementById("loginButton")
-    .disabled = false;
-
-  document
-    .getElementById("loginButton")
-    .textContent = "SIGN IN";
 
 }
 
@@ -2079,12 +2419,6 @@ if(
     "adminLoggedIn"
   ) === "yes"
 ){
-
-  /*
-   * Password is deliberately not restored.
-   * The admin must authenticate again after
-   * a page reload.
-   */
 
 }
 
